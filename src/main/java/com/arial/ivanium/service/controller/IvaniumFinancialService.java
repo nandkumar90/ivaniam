@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-
+import java.io.StringReader;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -51,11 +54,12 @@ public class IvaniumFinancialService {
 	@RequestMapping(value = "/fact/getAllExternalData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String getAllExternalData() {
 		try {
+			List<FinancialIncomeStatmentDTO> factIngredientDTOs = new ArrayList<>();
+			Map<String, Integer> pagedetail=new HashMap<>();
 			List<FinancialIncomeStatmentDTO> factIngredients = null;
 			final String uri = "http://localhost:8080/springrestexample/employees.json";
 			String line = "";
 			HttpHeaders headers = new HttpHeaders();
-			
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<String> result = restTemplate.exchange(
@@ -66,15 +70,35 @@ public class IvaniumFinancialService {
 
 			System.out.println(data);
 
-			br = new BufferedReader(new FileReader(data));
-			while ((line = br.readLine()) != null) {
-
-				System.out.println(line);
+			BufferedReader bufReader = new BufferedReader(new StringReader(data));
+			String PageDetail=bufReader.readLine();
+			String columnDetail=bufReader.readLine();
+			int crrentPage=0;
+			int totalPage=0;
+			if(null!=PageDetail) {
+				String [] pageDetails=PageDetail.split(",");
+				for (String string : pageDetails) {
+					String[] mapEntry=string.split(":");
+					
+					pagedetail.put(mapEntry[0], Integer.parseInt(mapEntry[1].trim()));
+					
+				}
+				crrentPage=pagedetail.get("CURRENT_PAGE");
+				totalPage=pagedetail.get("TOTAL_PAGES");
 
 			}
+			while( (line=bufReader.readLine()) != null )
+			{
+               String [] tagData=line.split(",");
+               FinancialIncomeStatmentDTO faFinancialIncomeStatmentDTO=new FinancialIncomeStatmentDTO();
+               faFinancialIncomeStatmentDTO.setTag(tagData[0].trim());
+               faFinancialIncomeStatmentDTO.setValue(tagData[1].trim());
+			   factIngredientDTOs.add(faFinancialIncomeStatmentDTO);
+               
+			}
 
-			List<FactIngredientDTO> factIngredientDTOs = null;
-			delegate.saveFinancialIncomeData(factIngredients);
+
+			delegate.saveFinancialIncomeData(factIngredientDTOs);
 			return "save done";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

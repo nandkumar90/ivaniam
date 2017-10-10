@@ -80,17 +80,21 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 	public void saveFactIngedient(List<FinancialIncomeStatmentDTO> factIngredient) throws Exception {
 		try {
 			System.out.println("Saving all csv data into table financial_income_statement ");
+			session = getSession();
+			tx = getSession().beginTransaction();
 			for (FinancialIncomeStatmentDTO financialIncomeStatmentDTO : factIngredient) {
-				session = getSession();
-				tx = getSession().beginTransaction();
+				
 				session.save(financialIncomeStatmentDTO);
 			}
 
 			tx.commit();
-			session.close();
+			
 		} catch (Exception ex) {
 			throw new Exception(ex.getMessage().toString());
 
+		}
+		finally {
+			System.out.println("in finally");
 		}
 	}
 

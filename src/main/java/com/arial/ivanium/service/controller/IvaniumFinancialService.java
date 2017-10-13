@@ -27,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import com.arial.ivanium.delegate.DatabaseDelegate;
 import com.arial.ivanium.dto.FactIngredientDTO;
 import com.arial.ivanium.dto.FinancialIncomeStatmentDTO;
+import com.arial.ivanium.dto.StandardIncomeStatment;
 
 @Controller
 public class IvaniumFinancialService {
@@ -55,11 +56,12 @@ public class IvaniumFinancialService {
 	public @ResponseBody String getAllExternalData() {
 		try {
 			List<FinancialIncomeStatmentDTO> factIngredientDTOs = new ArrayList<>();
-			Map<String, Integer> pagedetail=new HashMap<>();
+			Map<String, Integer> pagedetail = new HashMap<>();
 			List<FinancialIncomeStatmentDTO> factIngredients = null;
 			final String uri = "http://localhost:8080/springrestexample/employees.json";
 			String line = "";
 			HttpHeaders headers = new HttpHeaders();
+			
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<String> result = restTemplate.exchange(
@@ -71,32 +73,30 @@ public class IvaniumFinancialService {
 			System.out.println(data);
 
 			BufferedReader bufReader = new BufferedReader(new StringReader(data));
-			String PageDetail=bufReader.readLine();
-			String columnDetail=bufReader.readLine();
-			int crrentPage=0;
-			int totalPage=0;
-			if(null!=PageDetail) {
-				String [] pageDetails=PageDetail.split(",");
+			String PageDetail = bufReader.readLine();
+			String columnDetail = bufReader.readLine();
+			int crrentPage = 0;
+			int totalPage = 0;
+			if (null != PageDetail) {
+				String[] pageDetails = PageDetail.split(",");
 				for (String string : pageDetails) {
-					String[] mapEntry=string.split(":");
-					
+					String[] mapEntry = string.split(":");
+
 					pagedetail.put(mapEntry[0], Integer.parseInt(mapEntry[1].trim()));
-					
+
 				}
-				crrentPage=pagedetail.get("CURRENT_PAGE");
-				totalPage=pagedetail.get("TOTAL_PAGES");
+				crrentPage = pagedetail.get("CURRENT_PAGE");
+				totalPage = pagedetail.get("TOTAL_PAGES");
 
 			}
-			while( (line=bufReader.readLine()) != null )
-			{
-               String [] tagData=line.split(",");
-               FinancialIncomeStatmentDTO faFinancialIncomeStatmentDTO=new FinancialIncomeStatmentDTO();
-               faFinancialIncomeStatmentDTO.setTag(tagData[0].trim());
-               faFinancialIncomeStatmentDTO.setValue(tagData[1].trim());
-			   factIngredientDTOs.add(faFinancialIncomeStatmentDTO);
-               
-			}
+			while ((line = bufReader.readLine()) != null) {
+				String[] tagData = line.split(",");
+				FinancialIncomeStatmentDTO faFinancialIncomeStatmentDTO = new FinancialIncomeStatmentDTO();
+				faFinancialIncomeStatmentDTO.setTag(tagData[0].trim());
+				faFinancialIncomeStatmentDTO.setValue(tagData[1].trim());
+				factIngredientDTOs.add(faFinancialIncomeStatmentDTO);
 
+			}
 
 			delegate.saveFinancialIncomeData(factIngredientDTOs);
 			return "save done";
@@ -107,4 +107,65 @@ public class IvaniumFinancialService {
 		return null;
 	}
 
+	@RequestMapping(value = "/fact/getStandardIncomeStatmentData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getAllIncomeStatmentData() {
+		try {
+			String[] year = { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017" };
+			String[] period = { "Q1", "Q2", "Q3", "Q4" };
+
+			int crrentPage = 0;
+			int totalPage = 0;
+			List<FinancialIncomeStatmentDTO> factIngredientDTOs = new ArrayList<>();
+			Map<String, Integer> pagedetail = new HashMap<>();
+			List<FinancialIncomeStatmentDTO> factIngredients = null;
+			final String uri = "http://localhost:8080/springrestexample/employees.json";
+			String line = "";
+			HttpHeaders headers = new HttpHeaders();
+			
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			for (int z = 0; z <= 7; z++) {
+				String fiscalYear=year[z];
+				
+				for (int i = 0; i <= 3; i++) {
+
+					String fiscalQuarter = "fiscal_period=" + "Q" + i;
+					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
+							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="+fiscalYear+"&"
+									+ fiscalQuarter,
+							HttpMethod.GET, request, StandardIncomeStatment.class);
+					String tesrtUrl="https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="+fiscalYear+"&"+ fiscalQuarter;
+					System.out.println(tesrtUrl);
+					StandardIncomeStatment data = result.getBody();
+					crrentPage = data.getCurrent_page();
+					totalPage = data.getTotal_pages();
+					List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
+					// delegate.saveFinancialIncomeData(factIngredientDTOs);
+
+					if ((crrentPage != totalPage) && (totalPage>1)) {
+						crrentPage += 1;
+						String urlAttr = ("page_index=" + crrentPage);
+						ResponseEntity<StandardIncomeStatment> results = restTemplate.exchange(
+								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="+fiscalYear+"&"+fiscalQuarter+"&page_index="+crrentPage,
+								HttpMethod.GET, request, StandardIncomeStatment.class);
+						data = result.getBody();
+						crrentPage = data.getCurrent_page();
+						List<FinancialIncomeStatmentDTO> IncomeStatments = data.getData();
+						// delegate.saveFinancialIncomeData(IncomeStatments);
+
+					}
+
+					//System.out.println(data);
+				}
+
+			}
+
+			// delegate.saveFinancialIncomeData(factIngredientDTOs);
+			return "save done";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

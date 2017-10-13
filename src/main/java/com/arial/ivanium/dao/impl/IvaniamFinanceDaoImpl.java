@@ -81,13 +81,11 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 		try {
 			System.out.println("Saving all csv data into table financial_income_statement ");
 			session = getSession();
-			tx = getSession().beginTransaction();
 			for (FinancialIncomeStatmentDTO financialIncomeStatmentDTO : factIngredient) {
 				
 				session.save(financialIncomeStatmentDTO);
 			}
 
-			tx.commit();
 			
 		} catch (Exception ex) {
 			throw new Exception(ex.getMessage().toString());

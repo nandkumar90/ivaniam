@@ -61,7 +61,7 @@ public class IvaniumFinancialService {
 			final String uri = "http://localhost:8080/springrestexample/employees.json";
 			String line = "";
 			HttpHeaders headers = new HttpHeaders();
-			
+	
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<String> result = restTemplate.exchange(
@@ -121,7 +121,7 @@ public class IvaniumFinancialService {
 			final String uri = "http://localhost:8080/springrestexample/employees.json";
 			String line = "";
 			HttpHeaders headers = new HttpHeaders();
-			
+		
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			for (int z = 0; z <= 7; z++) {
@@ -129,7 +129,7 @@ public class IvaniumFinancialService {
 				
 				for (int i = 0; i <= 3; i++) {
 
-					String fiscalQuarter = "fiscal_period=" + "Q" + i;
+					String fiscalQuarter = "fiscal_period=" +period[i];
 					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
 							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="+fiscalYear+"&"
 									+ fiscalQuarter,

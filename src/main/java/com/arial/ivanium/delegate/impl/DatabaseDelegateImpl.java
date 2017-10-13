@@ -26,7 +26,7 @@ public class DatabaseDelegateImpl implements DatabaseDelegate {
 		return ivaniamFinanceDao.getAllFactFragment();
 	}
 
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public void saveFinancialIncomeData(List<FinancialIncomeStatmentDTO> factIngredients) throws Exception {
 		 ivaniamFinanceDao.saveFactIngedient(factIngredients);
 	}

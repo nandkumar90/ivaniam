@@ -61,7 +61,7 @@ public class IvaniumFinancialService {
 			final String uri = "http://localhost:8080/springrestexample/employees.json";
 			String line = "";
 			HttpHeaders headers = new HttpHeaders();
-	
+
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<String> result = restTemplate.exchange(
@@ -111,7 +111,7 @@ public class IvaniumFinancialService {
 	public @ResponseBody String getAllIncomeStatmentData() {
 		try {
 			String[] year = { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017" };
-			String[] period = { "Q1", "Q2", "Q3", "Q4" };
+			String[] period = { "Q1", "Q2", "Q3", "Q4" ,"FY"};
 
 			int crrentPage = 0;
 			int totalPage = 0;
@@ -127,7 +127,7 @@ public class IvaniumFinancialService {
 			for (int z = 0; z <= 7; z++) {
 				String fiscalYear=year[z];
 				
-				for (int i = 0; i <= 3; i++) {
+				for (int i = 0; i <= 4; i++) {
 
 					String fiscalQuarter = "fiscal_period=" +period[i];
 					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
@@ -140,7 +140,7 @@ public class IvaniumFinancialService {
 					crrentPage = data.getCurrent_page();
 					totalPage = data.getTotal_pages();
 					List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
-					// delegate.saveFinancialIncomeData(factIngredientDTOs);
+					delegate.saveFinancialIncomeData(factIngredientDTOs);
 
 					if ((crrentPage != totalPage) && (totalPage>1)) {
 						crrentPage += 1;
@@ -151,7 +151,7 @@ public class IvaniumFinancialService {
 						data = result.getBody();
 						crrentPage = data.getCurrent_page();
 						List<FinancialIncomeStatmentDTO> IncomeStatments = data.getData();
-						// delegate.saveFinancialIncomeData(IncomeStatments);
+						delegate.saveFinancialIncomeData(IncomeStatments);
 
 					}
 

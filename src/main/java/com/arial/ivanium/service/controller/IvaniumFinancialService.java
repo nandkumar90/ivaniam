@@ -168,4 +168,77 @@ public class IvaniumFinancialService {
 		}
 		return null;
 	}
+	
+	
+	@RequestMapping(value = "/fact/historydata", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody List<HistoricaldataDTO> getFacts() {
+		try {
+			
+			HttpHeaders headers = new HttpHeaders();
+
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<HistoricaldataDTO> result = restTemplate.exchange(
+					"https://api.intrinio.com/financials/standardized.csv?fiscal_period=FY&fiscal_year=2016&statement=income_statement&ticker=EOG",
+					HttpMethod.GET, request, HistoricaldataDTO.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@RequestMapping(value = "/fact/intiutionalowner", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody List<IntiutionalOwnershipDTO> getFacts() {
+		try {
+			
+			HttpHeaders headers = new HttpHeaders();
+
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<IntiutionalOwnershipDTO> result = restTemplate.exchange(
+					"https://api.intrinio.com/financials/standardized.csv?fiscal_period=FY&fiscal_year=2016&statement=income_statement&ticker=EOG",
+					HttpMethod.GET, request, IntiutionalOwnershipDTO.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@RequestMapping(value = "/fact/news", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody List<NewsDTO> getFacts() {
+		try {
+			
+			HttpHeaders headers = new HttpHeaders();
+
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<NewsDTO> result = restTemplate.exchange(
+					"https://api.intrinio.com/financials/standardized.csv?fiscal_period=FY&fiscal_year=2016&statement=income_statement&ticker=EOG",
+					HttpMethod.GET, request, NewsDTO.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@RequestMapping(value = "/fact/quarter", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody List<QuarterlyScriptsDTO> getFacts() {
+		try {
+			
+			HttpHeaders headers = new HttpHeaders();
+
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<QuarterlyScriptsDTO> result = restTemplate.exchange(
+					"https://api.intrinio.com/financials/standardized.csv?fiscal_period=FY&fiscal_year=2016&statement=income_statement&ticker=EOG",
+					HttpMethod.GET, request, QuarterlyScriptsDTO.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

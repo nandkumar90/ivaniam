@@ -27,6 +27,10 @@ import org.springframework.web.client.RestTemplate;
 import com.arial.ivanium.delegate.DatabaseDelegate;
 import com.arial.ivanium.dto.FactIngredientDTO;
 import com.arial.ivanium.dto.FinancialIncomeStatmentDTO;
+import com.arial.ivanium.dto.HistoricaldataDTO;
+import com.arial.ivanium.dto.IntiutionalOwnershipDTO;
+import com.arial.ivanium.dto.NewsDTO;
+import com.arial.ivanium.dto.QuarterlyScriptsDTO;
 import com.arial.ivanium.dto.StandardIncomeStatment;
 
 @Controller
@@ -171,7 +175,7 @@ public class IvaniumFinancialService {
 	
 	
 	@RequestMapping(value = "/fact/historydata", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<HistoricaldataDTO> getFacts() {
+	public @ResponseBody List<HistoricaldataDTO> getHistoricaldataFacts() {
 		try {
 			
 			HttpHeaders headers = new HttpHeaders();
@@ -189,7 +193,7 @@ public class IvaniumFinancialService {
 	}
 	
 	@RequestMapping(value = "/fact/intiutionalowner", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<IntiutionalOwnershipDTO> getFacts() {
+	public @ResponseBody List<IntiutionalOwnershipDTO> getIntiutionalOwnershipFacts() {
 		try {
 			
 			HttpHeaders headers = new HttpHeaders();
@@ -207,7 +211,7 @@ public class IvaniumFinancialService {
 	}
 	
 	@RequestMapping(value = "/fact/news", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<NewsDTO> getFacts() {
+	public @ResponseBody List<NewsDTO> getNewsFacts() {
 		try {
 			
 			HttpHeaders headers = new HttpHeaders();
@@ -225,7 +229,7 @@ public class IvaniumFinancialService {
 	}
 	
 	@RequestMapping(value = "/fact/quarter", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<QuarterlyScriptsDTO> getFacts() {
+	public @ResponseBody List<QuarterlyScriptsDTO> getqueryFacts() {
 		try {
 			
 			HttpHeaders headers = new HttpHeaders();

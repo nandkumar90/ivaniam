@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Table(name="financial_income_statement")
 public class HistoricaldataDTO {
 	@Id
-	@Column(name="TAG")
+	@Column(name="id")
 	private String id;
 	
 	@Column(name="date")

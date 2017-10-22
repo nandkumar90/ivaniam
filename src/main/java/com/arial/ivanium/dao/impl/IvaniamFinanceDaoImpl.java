@@ -9,44 +9,18 @@ import org.hibernate.Transaction;
 
 import com.arial.ivanium.dao.AbstractDao;
 import com.arial.ivanium.dao.IvaniamFinanceDao;
+import com.arial.ivanium.dto.CompaniesDTO;
 import com.arial.ivanium.dto.FactIngredientDTO;
 import com.arial.ivanium.dto.FinancialIncomeStatmentDTO;
+import com.arial.ivanium.dto.HistoricaldataDTO;
+import com.arial.ivanium.dto.IntiutionalOwnershipDTO;
+import com.arial.ivanium.dto.NewsDTO;
 
 public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinanceDao {
 	Session session = null;
 	Transaction tx = null;
 
-	// @Override
-	// public List<Menu> getMenuByDate(Date date) {
-	// System.out.println("Fetching menu for "+ date);
-	// Criteria criteria = getSession().createCriteria(Menu.class);
-	// criteria.add(Restrictions.eq("date", date));
-	// return criteria.list();
-	// }
-	//
-	// @Override
-	// public List<Menu> getTodaysMenu() {
-	// List<Menu> todayMenu = getMenuByDate(new Date(System.currentTimeMillis()));
-	// if(todayMenu.size()>0 )
-	// return todayMenu;
-	// return getMenuByDate(Date.valueOf("2016-12-18"));
-	// }
-	//
-	// @Override
-	// public Menu getTodaysMenuByCuisine(int cuisine) {
-	// List<Menu> todaysMenu = getTodaysMenu();
-	// Optional<Menu> menu = todaysMenu.stream()
-	// .filter(m -> m.getCuisine().getId() == cuisine).findAny();
-	// return menu.get();
-	// }
-	//
-	// @Override
-	// public Menu getMenuById(String menuItem) {
-	// System.out.println("Fetching menu for "+ menuItem);
-	// Criteria criteria = getSession().createCriteria(Menu.class);
-	// criteria.add(Restrictions.eq("id", Integer.parseInt(menuItem)));
-	// return (Menu)criteria.uniqueResult();
-	// }
+
 
 	public List<FactIngredientDTO> getAllFactFragment() throws Exception {
 		try {
@@ -60,22 +34,6 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 
 		}
 	}
-
-	/*
-	 * public void saveFactIngedient(List<FinancialIncomeStatmentDTO>
-	 * factIngredient) throws Exception { try { System.out.
-	 * println("Saving all csv data into table financial_income_statement ");
-	 * 
-	 * Query query = getSession().createQuery("from FinancialIncomeStatmentDTO");
-	 * return (List<FactIngredientDTO>) query.list(); } catch (Exception ex) {
-	 * 
-	 * throw new Exception(ex.getMessage().toString());
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
-
 
 	public void saveFactIngedient(List<FinancialIncomeStatmentDTO> factIngredient) throws Exception {
 		try {
@@ -94,6 +52,90 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 		finally {
 			System.out.println("in finally");
 		}
+	}
+
+	@Override
+	public void saveFactHistory(List<HistoricaldataDTO> incomeStatments) throws Exception {
+		try {
+			System.out.println("Saving all csv data into table financial_income_statement ");
+			session = getSession();
+			for (HistoricaldataDTO historyDTO : incomeStatments) {
+				
+				session.save(historyDTO);
+			}
+
+			
+		} catch (Exception ex) {
+			throw new Exception(ex.getMessage().toString());
+
+		}
+		finally {
+			System.out.println("in finally");
+		}
+		
+	}
+
+	@Override
+	public void saveFactCompnaies(List<CompaniesDTO> incomeStatments) throws Exception {
+		try {
+			System.out.println("Saving all csv data into table financial_income_statement ");
+			session = getSession();
+			for (CompaniesDTO companiesDTO : incomeStatments) {
+				
+				session.save(companiesDTO);
+			}
+
+			
+		} catch (Exception ex) {
+			throw new Exception(ex.getMessage().toString());
+
+		}
+		finally {
+			System.out.println("in finally");
+		}
+		
+	}
+
+	@Override
+	public void saveFactIntiutionalOwnership(List<IntiutionalOwnershipDTO> incomeStatments) throws Exception {
+		try {
+			System.out.println("Saving all csv data into table financial_income_statement ");
+			session = getSession();
+			for (IntiutionalOwnershipDTO intiutionalOwnershipDTO : incomeStatments) {
+				
+				session.save(intiutionalOwnershipDTO);
+			}
+
+			
+		} catch (Exception ex) {
+			throw new Exception(ex.getMessage().toString());
+
+		}
+		finally {
+			System.out.println("in finally");
+		}
+		
+	}
+
+	@Override
+	public void saveFactNews(List<NewsDTO> news) throws Exception {
+		try {
+			System.out.println("Saving all csv data into table financial_income_statement ");
+			session = getSession();
+			for (NewsDTO newsDTO : news) {
+				
+				session.save(newsDTO);
+			}
+
+			
+		} catch (Exception ex) {
+			throw new Exception(ex.getMessage().toString());
+
+		}
+		finally {
+			System.out.println("in finally");
+		}
+		
 	}
 
 }

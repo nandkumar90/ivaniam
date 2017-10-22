@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="financial_income_statement")
-public class QuarterlyScriptsDTO {
+public class CompaniesDTO {
 	
 	@Id
 	@Column(name=" filing_date")

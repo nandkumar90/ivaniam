@@ -18,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,8 +31,12 @@ import com.arial.ivanium.dto.FinancialIncomeStatmentDTO;
 import com.arial.ivanium.dto.HistoricaldataDTO;
 import com.arial.ivanium.dto.IntiutionalOwnershipDTO;
 import com.arial.ivanium.dto.NewsDTO;
-import com.arial.ivanium.dto.QuarterlyScriptsDTO;
+import com.arial.ivanium.dto.StandardCompaniesData;
+import com.arial.ivanium.dto.CompaniesDTO;
+import com.arial.ivanium.dto.StandardHistoricalData;
 import com.arial.ivanium.dto.StandardIncomeStatment;
+import com.arial.ivanium.dto.StandardInstuitionalOwnershipDTO;
+import com.arial.ivanium.dto.StandardNewsDTO;
 
 @Controller
 public class IvaniumFinancialService {
@@ -65,7 +70,7 @@ public class IvaniumFinancialService {
 			final String uri = "http://localhost:8080/springrestexample/employees.json";
 			String line = "";
 			HttpHeaders headers = new HttpHeaders();
-
+			
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<String> result = restTemplate.exchange(
@@ -111,11 +116,12 @@ public class IvaniumFinancialService {
 		return null;
 	}
 
+	// this consist income statment and calculation section of requirment
 	@RequestMapping(value = "/fact/getStandardIncomeStatmentData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String getAllIncomeStatmentData() {
 		try {
 			String[] year = { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017" };
-			String[] period = { "Q1", "Q2", "Q3", "Q4" ,"FY"};
+			String[] period = { "Q1", "Q2", "Q3", "Q4", "FY" };
 
 			int crrentPage = 0;
 			int totalPage = 0;
@@ -125,20 +131,21 @@ public class IvaniumFinancialService {
 			final String uri = "http://localhost:8080/springrestexample/employees.json";
 			String line = "";
 			HttpHeaders headers = new HttpHeaders();
-		
+			
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			for (int z = 0; z <= 7; z++) {
-				String fiscalYear=year[z];
-				
+				String fiscalYear = year[z];
+
 				for (int i = 0; i <= 4; i++) {
 
-					String fiscalQuarter = "fiscal_period=" +period[i];
+					String fiscalQuarter = "fiscal_period=" + period[i];
 					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
-							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="+fiscalYear+"&"
-									+ fiscalQuarter,
+							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
+									+ fiscalYear + "&" + fiscalQuarter,
 							HttpMethod.GET, request, StandardIncomeStatment.class);
-					String tesrtUrl="https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="+fiscalYear+"&"+ fiscalQuarter;
+					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
+							+ fiscalYear + "&" + fiscalQuarter;
 					System.out.println(tesrtUrl);
 					StandardIncomeStatment data = result.getBody();
 					crrentPage = data.getCurrent_page();
@@ -146,11 +153,12 @@ public class IvaniumFinancialService {
 					List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
 					delegate.saveFinancialIncomeData(factIngredientDTOs);
 
-					if ((crrentPage != totalPage) && (totalPage>1)) {
+					if ((crrentPage != totalPage) && (totalPage > 1)) {
 						crrentPage += 1;
 						String urlAttr = ("page_index=" + crrentPage);
 						ResponseEntity<StandardIncomeStatment> results = restTemplate.exchange(
-								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="+fiscalYear+"&"+fiscalQuarter+"&page_index="+crrentPage,
+								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
+										+ fiscalYear + "&" + fiscalQuarter + "&page_index=" + crrentPage,
 								HttpMethod.GET, request, StandardIncomeStatment.class);
 						data = result.getBody();
 						crrentPage = data.getCurrent_page();
@@ -159,7 +167,7 @@ public class IvaniumFinancialService {
 
 					}
 
-					//System.out.println(data);
+					// System.out.println(data);
 				}
 
 			}
@@ -172,77 +180,456 @@ public class IvaniumFinancialService {
 		}
 		return null;
 	}
-	
-	
-	@RequestMapping(value = "/fact/historydata", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<HistoricaldataDTO> getHistoricaldataFacts() {
-		try {
-			
-			HttpHeaders headers = new HttpHeaders();
 
+	// daily script
+
+	@RequestMapping(value = "/fact/cashflow", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getHistoricaldataFacts() {
+		try {
+			String[] year = { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017" };
+			String[] period = { "Q1", "Q2", "Q3", "Q4", "FY" };
+
+			int crrentPage = 0;
+			int totalPage = 0;
+		
+			HttpHeaders headers = new HttpHeaders();
+			
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<HistoricaldataDTO> result = restTemplate.exchange(
-					"https://api.intrinio.com/financials/standardized.csv?fiscal_period=FY&fiscal_year=2016&statement=income_statement&ticker=EOG",
-					HttpMethod.GET, request, HistoricaldataDTO.class);
+			for (int z = 0; z <= 7; z++) {
+				String fiscalYear = year[z];
+
+				for (int i = 0; i <= 4; i++) {
+
+					String fiscalQuarter = "fiscal_period=" + period[i];
+					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
+							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=cash_flow_statement&fiscal_year="
+									+ fiscalYear + "&" + fiscalQuarter,
+							HttpMethod.GET, request, StandardIncomeStatment.class);
+					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=cash_flow_statement&fiscal_year="
+							+ fiscalYear + "&" + fiscalQuarter;
+					System.out.println(tesrtUrl);
+					StandardIncomeStatment data = result.getBody();
+					crrentPage = data.getCurrent_page();
+					totalPage = data.getTotal_pages();
+					List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
+					//delegate.saveFinancialIncomeData(factIngredientDTOs);
+
+					if ((crrentPage != totalPage) && (totalPage > 1)) {
+						crrentPage += 1;
+						String urlAttr = ("page_index=" + crrentPage);
+						ResponseEntity<StandardIncomeStatment> results = restTemplate.exchange(
+								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=cash_flow_statement&fiscal_year="
+										+ fiscalYear + "&" + fiscalQuarter + "&page_index=" + crrentPage,
+								HttpMethod.GET, request, StandardIncomeStatment.class);
+						data = result.getBody();
+						crrentPage = data.getCurrent_page();
+						List<FinancialIncomeStatmentDTO> IncomeStatments = data.getData();
+						//delegate.saveFinancialIncomeData(IncomeStatments);
+
+					}
+
+					// System.out.println(data);
+				}
+
+			}
+
+			// delegate.saveFinancialIncomeData(factIngredientDTOs);
+			return "save done";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+
 	}
-	
-	@RequestMapping(value = "/fact/intiutionalowner", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<IntiutionalOwnershipDTO> getIntiutionalOwnershipFacts() {
+
+	// bi-weekly ownership
+	@RequestMapping(value = "/fact/balancesheet", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getIntiutionalOwnershipFacts() {
 		try {
+			String[] year = { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017" };
+			String[] period = { "Q1", "Q2", "Q3", "Q4", "FY" };
+
+			int crrentPage = 0;
+			int totalPage = 0;
 			
 			HttpHeaders headers = new HttpHeaders();
-
+			
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<IntiutionalOwnershipDTO> result = restTemplate.exchange(
-					"https://api.intrinio.com/financials/standardized.csv?fiscal_period=FY&fiscal_year=2016&statement=income_statement&ticker=EOG",
-					HttpMethod.GET, request, IntiutionalOwnershipDTO.class);
+			for (int z = 0; z <= 7; z++) {
+				String fiscalYear = year[z];
+
+				for (int i = 0; i <= 4; i++) {
+
+					String fiscalQuarter = "fiscal_period=" + period[i];
+					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
+							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
+									+ fiscalYear + "&" + fiscalQuarter,
+							HttpMethod.GET, request, StandardIncomeStatment.class);
+					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
+							+ fiscalYear + "&" + fiscalQuarter;
+					System.out.println(tesrtUrl);
+					StandardIncomeStatment data = result.getBody();
+					crrentPage = data.getCurrent_page();
+					totalPage = data.getTotal_pages();
+					List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
+					//delegate.saveFinancialIncomeData(factIngredientDTOs);
+
+					if ((crrentPage != totalPage) && (totalPage > 1)) {
+						crrentPage += 1;
+						String urlAttr = ("page_index=" + crrentPage);
+						ResponseEntity<StandardIncomeStatment> results = restTemplate.exchange(
+								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
+										+ fiscalYear + "&" + fiscalQuarter + "&page_index=" + crrentPage,
+								HttpMethod.GET, request, StandardIncomeStatment.class);
+						data = result.getBody();
+						crrentPage = data.getCurrent_page();
+						List<FinancialIncomeStatmentDTO> IncomeStatments = data.getData();
+						//delegate.saveFinancialIncomeData(IncomeStatments);
+
+					}
+
+					// System.out.println(data);
+				}
+
+			}
+
+			// delegate.saveFinancialIncomeData(factIngredientDTOs);
+			return "save done";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+
 	}
-	
-	@RequestMapping(value = "/fact/news", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<NewsDTO> getNewsFacts() {
+
+	// daily script for closed price
+
+	@RequestMapping(value = "/fact/dailyscript/closedprice", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getHistoryClosedPrice() {
 		try {
+
+			int crrentPage = 0;
+			int totalPage = 0;
 			
 			HttpHeaders headers = new HttpHeaders();
-
+			
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<NewsDTO> result = restTemplate.exchange(
-					"https://api.intrinio.com/financials/standardized.csv?fiscal_period=FY&fiscal_year=2016&statement=income_statement&ticker=EOG",
-					HttpMethod.GET, request, NewsDTO.class);
+
+			ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
+					"https://api.intrinio.com/historical_data?identifier=EOG&item=close_price", HttpMethod.GET, request,
+					StandardHistoricalData.class);
+			StandardHistoricalData data = result.getBody();
+			crrentPage = data.getCurrent_page();
+			totalPage = data.getTotal_pages();
+			List<HistoricaldataDTO> IncomeStatment = data.getData();
+			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+
+			if ((crrentPage != totalPage) && (totalPage > 1)) {
+				crrentPage += 1;
+				String urlAttr = ("page_index=" + crrentPage);
+				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
+						"https://api.intrinio.com/historical_data?identifier=EOG&item=close_price", HttpMethod.GET,
+						request, HistoricaldataDTO.class);
+				data = result.getBody();
+				crrentPage = data.getCurrent_page();
+				List<HistoricaldataDTO> IncomeStatments = data.getData();
+				//delegate.saveDailyScriptClosedPriceData(IncomeStatments);
+
+			}
+
+			// System.out.println(data);
+
+			// delegate.saveFinancialIncomeData(factIngredientDTOs);
+			return "save done";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+
 	}
-	
-	@RequestMapping(value = "/fact/quarter", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<QuarterlyScriptsDTO> getqueryFacts() {
+
+	// daily script for volume
+
+	@RequestMapping(value = "/fact/dailyscript/volume", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getdailyscriptVomume() {
 		try {
+
+			int crrentPage = 0;
+			int totalPage = 0;
 			
 			HttpHeaders headers = new HttpHeaders();
-
+		
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<QuarterlyScriptsDTO> result = restTemplate.exchange(
-					"https://api.intrinio.com/financials/standardized.csv?fiscal_period=FY&fiscal_year=2016&statement=income_statement&ticker=EOG",
-					HttpMethod.GET, request, QuarterlyScriptsDTO.class);
+
+			ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
+					"https://api.intrinio.com/historical_data?identifier=EOG&item=volume", HttpMethod.GET, request,
+					StandardHistoricalData.class);
+			StandardHistoricalData data = result.getBody();
+			crrentPage = data.getCurrent_page();
+			totalPage = data.getTotal_pages();
+			List<HistoricaldataDTO> IncomeStatment = data.getData();
+			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+
+			if ((crrentPage != totalPage) && (totalPage > 1)) {
+				crrentPage += 1;
+				String urlAttr = ("page_index=" + crrentPage);
+				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
+						"https://api.intrinio.com/historical_data?identifier=EOG&item=volume", HttpMethod.GET, request,
+						HistoricaldataDTO.class);
+				data = result.getBody();
+				crrentPage = data.getCurrent_page();
+				List<HistoricaldataDTO> IncomeStatments = data.getData();
+				//delegate.saveDailyScriptClosedPriceData(IncomeStatments);
+
+			}
+
+			// System.out.println(data);
+
+			// delegate.saveFinancialIncomeData(factIngredientDTOs);
+			return "save done";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+
 	}
+
+	// daily script for beta
+
+	@RequestMapping(value = "/fact/dailyscript/beta", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getdailyscriptBeta() {
+		try {
+
+			int crrentPage = 0;
+			int totalPage = 0;
+			
+			HttpHeaders headers = new HttpHeaders();
+			
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
+					"https://api.intrinio.com/historical_data?identifier=EOG&item=beta", HttpMethod.GET, request,
+					StandardHistoricalData.class);
+			StandardHistoricalData data = result.getBody();
+			crrentPage = data.getCurrent_page();
+			totalPage = data.getTotal_pages();
+			List<HistoricaldataDTO> IncomeStatment = data.getData();
+			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+
+			if ((crrentPage != totalPage) && (totalPage > 1)) {
+				crrentPage += 1;
+				String urlAttr = ("page_index=" + crrentPage);
+				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
+						"https://api.intrinio.com/historical_data?identifier=EOG&item=beta", HttpMethod.GET, request,
+						HistoricaldataDTO.class);
+				data = result.getBody();
+				crrentPage = data.getCurrent_page();
+				List<HistoricaldataDTO> IncomeStatments = data.getData();
+				//delegate.saveDailyScriptClosedPriceData(IncomeStatments);
+
+			}
+
+			// System.out.println(data);
+
+			// delegate.saveFinancialIncomeData(factIngredientDTOs);
+			return "save done";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	@RequestMapping(value = "/fact/dailyscript/news", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getdailyscriptNews() {
+		try {
+
+			int crrentPage = 0;
+			int totalPage = 0;
+			
+			HttpHeaders headers = new HttpHeaders();
+			
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<StandardNewsDTO> result = restTemplate.exchange(
+					"https://api.intrinio.com/news?identifier=EOG", HttpMethod.GET, request,
+					StandardNewsDTO.class);
+			StandardNewsDTO data = result.getBody();
+			crrentPage = data.getCurrent_page();
+			totalPage = data.getTotal_pages();
+			List<NewsDTO> IncomeStatment = data.getData();
+			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+
+			if ((crrentPage != totalPage) && (totalPage > 1)) {
+				crrentPage += 1;
+				String urlAttr = ("page_index=" + crrentPage);
+				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
+						"https://api.intrinio.com/news?identifier=EOG", HttpMethod.GET, request,
+						HistoricaldataDTO.class);
+				data = result.getBody();
+				crrentPage = data.getCurrent_page();
+				List<NewsDTO> news = data.getData();
+				//delegate.saveDailyScriptNewsData(news);
+
+			}
+
+			// System.out.println(data);
+
+			// delegate.saveFinancialIncomeData(factIngredientDTOs);
+			return "save done";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	// bi weekly script short interest
+	@RequestMapping(value = "/fact/biweeklyscript/shortinterest", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getBiWeeklyShortInterest() {
+		try {
+
+			int crrentPage = 0;
+			int totalPage = 0;
+			
+			HttpHeaders headers = new HttpHeaders();
+			
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
+					"https://api.intrinio.com/historical_data?identifier=EOG&item=short_interest", HttpMethod.GET,
+					request, StandardHistoricalData.class);
+			StandardHistoricalData data = result.getBody();
+			crrentPage = data.getCurrent_page();
+			totalPage = data.getTotal_pages();
+			List<HistoricaldataDTO> IncomeStatment = data.getData();
+			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+
+			if ((crrentPage != totalPage) && (totalPage > 1)) {
+				crrentPage += 1;
+				String urlAttr = ("page_index=" + crrentPage);
+				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
+						"https://api.intrinio.com/historical_data?identifier=EOG&item=short_interest", HttpMethod.GET,
+						request, HistoricaldataDTO.class);
+				data = result.getBody();
+				crrentPage = data.getCurrent_page();
+				List<HistoricaldataDTO> IncomeStatments = data.getData();
+				//delegate.saveDailyScriptClosedPriceData(IncomeStatments);
+
+			}
+
+			// System.out.println(data);
+
+			// delegate.saveFinancialIncomeData(factIngredientDTOs);
+			return "save done";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	// bi weekly script short interest
+	@RequestMapping(value = "/fact/biweeklyscript/instuitional/ownership", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getBiWeeklyInstuitional() {
+		try {
+
+			int crrentPage = 0;
+			int totalPage = 0;
+			HttpHeaders headers = new HttpHeaders();
+			
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<StandardInstuitionalOwnershipDTO> result = restTemplate.exchange(
+					"https://api.intrinio.com/securities/institutional_ownership?identifier=EOG", HttpMethod.GET,
+					request, StandardInstuitionalOwnershipDTO.class);
+			StandardInstuitionalOwnershipDTO data = result.getBody();
+			crrentPage = data.getCurrent_page();
+			totalPage = data.getTotal_pages();
+			List<IntiutionalOwnershipDTO> IncomeStatment = data.getData();
+			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+
+			if ((crrentPage != totalPage) && (totalPage > 1)) {
+				crrentPage += 1;
+				String urlAttr = ("page_index=" + crrentPage);
+				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
+						"https://api.intrinio.com/securities/institutional_ownership?identifier=EOG", HttpMethod.GET,
+						request, HistoricaldataDTO.class);
+				data = result.getBody();
+				crrentPage = data.getCurrent_page();
+				List<IntiutionalOwnershipDTO> IncomeStatments = data.getData();
+				//delegate.saveWeeklyTnstuitionalOwnership(IncomeStatments);
+
+			}
+
+			// System.out.println(data);
+
+			// delegate.saveFinancialIncomeData(factIngredientDTOs);
+			return "save done";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	// bi weekly script short interest
+	@RequestMapping(value = "/fact/biweeklyscript/quaterly/script/companies", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getQuaterlyScript() {
+		try {
+
+			int crrentPage = 0;
+			int totalPage = 0;
+		
+			
+			HttpHeaders headers = new HttpHeaders();
+			
+			HttpEntity<String> request = new HttpEntity<String>(headers);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<StandardCompaniesData> result = restTemplate.exchange(
+					"https://api.intrinio.com/companies/filings?identifier=EOG", HttpMethod.GET, request,
+					StandardCompaniesData.class);
+			StandardCompaniesData data = result.getBody();
+			crrentPage = data.getCurrent_page();
+			totalPage = data.getTotal_pages();
+			List<CompaniesDTO> IncomeStatment = data.getData();
+			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+
+			if ((crrentPage != totalPage) && (totalPage > 1)) {
+				crrentPage += 1;
+				String urlAttr = ("page_index=" + crrentPage);
+				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
+						"https://api.intrinio.com/companies/filings?identifier=EOG", HttpMethod.GET, request,
+						HistoricaldataDTO.class);
+				data = result.getBody();
+				crrentPage = data.getCurrent_page();
+				List<CompaniesDTO> IncomeStatments = data.getData();
+				//delegate.saveQuaterlyComapniesData(IncomeStatments);
+
+			}
+
+			// System.out.println(data);
+
+			// delegate.saveFinancialIncomeData(factIngredientDTOs);
+			return "save done";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
 }

@@ -8,8 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.arial.ivanium.dao.IvaniamFinanceDao;
 import com.arial.ivanium.delegate.DatabaseDelegate;
+import com.arial.ivanium.dto.CompaniesDTO;
 import com.arial.ivanium.dto.FactIngredientDTO;
 import com.arial.ivanium.dto.FinancialIncomeStatmentDTO;
+import com.arial.ivanium.dto.HistoricaldataDTO;
+import com.arial.ivanium.dto.IntiutionalOwnershipDTO;
+import com.arial.ivanium.dto.NewsDTO;
 
 
 /**
@@ -31,6 +35,31 @@ public class DatabaseDelegateImpl implements DatabaseDelegate {
 		 ivaniamFinanceDao.saveFactIngedient(factIngredients);
 	}
 	
+	@Override
+	public void saveDailyScriptClosedPriceData(List<HistoricaldataDTO> incomeStatments) throws Exception{
+		 ivaniamFinanceDao.saveFactHistory(incomeStatments);		
+	}
+	
+	
+	@Override
+	public void saveQuaterlyComapniesData(List<CompaniesDTO> incomeStatments) throws Exception {
+		 ivaniamFinanceDao.saveFactCompnaies(incomeStatments);		
+
+	}
+	
+	@Override
+	public void saveWeeklyTnstuitionalOwnership(List<IntiutionalOwnershipDTO> incomeStatments) throws Exception {
+		ivaniamFinanceDao.saveFactIntiutionalOwnership(incomeStatments);				
+	}
+
+	
+	@Override
+	public void saveDailyScriptNewsData(List<NewsDTO> news) throws Exception {
+		ivaniamFinanceDao.saveFactNews(news);				
+		
+	}
+
+
 	public IvaniamFinanceDao getIvaniamFinanceDao() {
 		return ivaniamFinanceDao;
 	}
@@ -38,6 +67,11 @@ public class DatabaseDelegateImpl implements DatabaseDelegate {
 	public void setIvaniamFinanceDao(IvaniamFinanceDao ivaniamFinanceDao) {
 		this.ivaniamFinanceDao = ivaniamFinanceDao;
 	}
+
+	
+	
+	
+	
 	
 //	
 //	@Override

@@ -2,16 +2,19 @@ package com.arial.ivanium.dto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="financial_income_statement")
+@Table(name="News")
 
 public class NewsDTO {
 	
 	@Id
-	@Column(name="TAG")
+	@Column(name="id")
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private String id;
 	
 	@Column(name="ticker")

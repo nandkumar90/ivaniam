@@ -36,24 +36,28 @@ public class DatabaseDelegateImpl implements DatabaseDelegate {
 	}
 	
 	@Override
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public void saveDailyScriptClosedPriceData(List<HistoricaldataDTO> incomeStatments) throws Exception{
 		 ivaniamFinanceDao.saveFactHistory(incomeStatments);		
 	}
 	
 	
 	@Override
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public void saveQuaterlyComapniesData(List<CompaniesDTO> incomeStatments) throws Exception {
 		 ivaniamFinanceDao.saveFactCompnaies(incomeStatments);		
 
 	}
 	
 	@Override
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public void saveWeeklyTnstuitionalOwnership(List<IntiutionalOwnershipDTO> incomeStatments) throws Exception {
 		ivaniamFinanceDao.saveFactIntiutionalOwnership(incomeStatments);				
 	}
 
 	
 	@Override
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public void saveDailyScriptNewsData(List<NewsDTO> news) throws Exception {
 		ivaniamFinanceDao.saveFactNews(news);				
 		

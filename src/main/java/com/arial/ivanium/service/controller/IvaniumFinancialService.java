@@ -213,7 +213,7 @@ public class IvaniumFinancialService {
 					crrentPage = data.getCurrent_page();
 					totalPage = data.getTotal_pages();
 					List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
-					//delegate.saveFinancialIncomeData(factIngredientDTOs);
+					delegate.saveFinancialIncomeData(IncomeStatment);
 
 					if ((crrentPage != totalPage) && (totalPage > 1)) {
 						crrentPage += 1;
@@ -225,7 +225,7 @@ public class IvaniumFinancialService {
 						data = result.getBody();
 						crrentPage = data.getCurrent_page();
 						List<FinancialIncomeStatmentDTO> IncomeStatments = data.getData();
-						//delegate.saveFinancialIncomeData(IncomeStatments);
+						delegate.saveFinancialIncomeData(IncomeStatments);
 
 					}
 
@@ -275,7 +275,7 @@ public class IvaniumFinancialService {
 					crrentPage = data.getCurrent_page();
 					totalPage = data.getTotal_pages();
 					List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
-					//delegate.saveFinancialIncomeData(factIngredientDTOs);
+					delegate.saveFinancialIncomeData(IncomeStatment);
 
 					if ((crrentPage != totalPage) && (totalPage > 1)) {
 						crrentPage += 1;
@@ -287,7 +287,7 @@ public class IvaniumFinancialService {
 						data = result.getBody();
 						crrentPage = data.getCurrent_page();
 						List<FinancialIncomeStatmentDTO> IncomeStatments = data.getData();
-						//delegate.saveFinancialIncomeData(IncomeStatments);
+						delegate.saveFinancialIncomeData(IncomeStatments);
 
 					}
 
@@ -327,7 +327,7 @@ public class IvaniumFinancialService {
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
 			List<HistoricaldataDTO> IncomeStatment = data.getData();
-			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+			delegate.saveDailyScriptClosedPriceData(IncomeStatment);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
@@ -338,7 +338,7 @@ public class IvaniumFinancialService {
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				List<HistoricaldataDTO> IncomeStatments = data.getData();
-				//delegate.saveDailyScriptClosedPriceData(IncomeStatments);
+				delegate.saveDailyScriptClosedPriceData(IncomeStatments);
 
 			}
 
@@ -364,7 +364,7 @@ public class IvaniumFinancialService {
 			int totalPage = 0;
 			
 			HttpHeaders headers = new HttpHeaders();
-		
+			
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 
@@ -375,7 +375,7 @@ public class IvaniumFinancialService {
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
 			List<HistoricaldataDTO> IncomeStatment = data.getData();
-			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+			delegate.saveDailyScriptClosedPriceData(IncomeStatment);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
@@ -386,7 +386,7 @@ public class IvaniumFinancialService {
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				List<HistoricaldataDTO> IncomeStatments = data.getData();
-				//delegate.saveDailyScriptClosedPriceData(IncomeStatments);
+				delegate.saveDailyScriptClosedPriceData(IncomeStatments);
 
 			}
 
@@ -412,7 +412,7 @@ public class IvaniumFinancialService {
 			int totalPage = 0;
 			
 			HttpHeaders headers = new HttpHeaders();
-			
+		
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
@@ -422,7 +422,7 @@ public class IvaniumFinancialService {
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
 			List<HistoricaldataDTO> IncomeStatment = data.getData();
-			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+			delegate.saveDailyScriptClosedPriceData(IncomeStatment);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
@@ -433,7 +433,7 @@ public class IvaniumFinancialService {
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				List<HistoricaldataDTO> IncomeStatments = data.getData();
-				//delegate.saveDailyScriptClosedPriceData(IncomeStatments);
+				delegate.saveDailyScriptClosedPriceData(IncomeStatments);
 
 			}
 
@@ -466,8 +466,8 @@ public class IvaniumFinancialService {
 			StandardNewsDTO data = result.getBody();
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
-			List<NewsDTO> IncomeStatment = data.getData();
-			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+			List<NewsDTO> neswss = data.getData();
+			delegate.saveDailyScriptNewsData(neswss);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
@@ -478,7 +478,7 @@ public class IvaniumFinancialService {
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				List<NewsDTO> news = data.getData();
-				//delegate.saveDailyScriptNewsData(news);
+				delegate.saveDailyScriptNewsData(news);
 
 			}
 
@@ -512,8 +512,8 @@ public class IvaniumFinancialService {
 			StandardHistoricalData data = result.getBody();
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
-			List<HistoricaldataDTO> IncomeStatment = data.getData();
-			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+			List<HistoricaldataDTO> factIngredientDTOs = data.getData();
+			delegate.saveDailyScriptClosedPriceData(factIngredientDTOs);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
@@ -524,7 +524,7 @@ public class IvaniumFinancialService {
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				List<HistoricaldataDTO> IncomeStatments = data.getData();
-				//delegate.saveDailyScriptClosedPriceData(IncomeStatments);
+				delegate.saveDailyScriptClosedPriceData(IncomeStatments);
 
 			}
 
@@ -557,8 +557,8 @@ public class IvaniumFinancialService {
 			StandardInstuitionalOwnershipDTO data = result.getBody();
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
-			List<IntiutionalOwnershipDTO> IncomeStatment = data.getData();
-			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+			List<IntiutionalOwnershipDTO> factIngredientDTOs = data.getData();
+			delegate.saveWeeklyTnstuitionalOwnership(factIngredientDTOs);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
@@ -569,7 +569,7 @@ public class IvaniumFinancialService {
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				List<IntiutionalOwnershipDTO> IncomeStatments = data.getData();
-				//delegate.saveWeeklyTnstuitionalOwnership(IncomeStatments);
+				delegate.saveWeeklyTnstuitionalOwnership(IncomeStatments);
 
 			}
 
@@ -604,8 +604,8 @@ public class IvaniumFinancialService {
 			StandardCompaniesData data = result.getBody();
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
-			List<CompaniesDTO> IncomeStatment = data.getData();
-			//delegate.saveFinancialIncomeData(factIngredientDTOs);
+			List<CompaniesDTO> companiesData = data.getData();
+			delegate.saveQuaterlyComapniesData(companiesData);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
@@ -615,8 +615,8 @@ public class IvaniumFinancialService {
 						HistoricaldataDTO.class);
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
-				List<CompaniesDTO> IncomeStatments = data.getData();
-				//delegate.saveQuaterlyComapniesData(IncomeStatments);
+				List<CompaniesDTO> compnaie = data.getData();
+				delegate.saveQuaterlyComapniesData(compnaie);
 
 			}
 

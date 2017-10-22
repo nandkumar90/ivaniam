@@ -2,14 +2,21 @@ package com.arial.ivanium.dto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="financial_income_statement")
+@Table(name="Company")
 public class CompaniesDTO {
 	
 	@Id
+	@Column(name=" id")
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private String id ;
+	
+	
 	@Column(name=" filing_date")
 	private String filing_date ;
 	
@@ -31,8 +38,6 @@ public class CompaniesDTO {
 	@Column(name="report_url")
 	private String report_url;
 	
-	@Column(name="instance_url")
-	private String instance_url;
 	
 	public String getFiling_date() {
 		return filing_date;
@@ -76,13 +81,7 @@ public class CompaniesDTO {
 	public void setReport_url(String report_url) {
 		this.report_url = report_url;
 	}
-	public String getInstance_url() {
-		return instance_url;
-	}
-	public void setInstance_url(String instance_url) {
-		this.instance_url = instance_url;
-	}
-
+	
 	
 
 }

@@ -129,6 +129,8 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 
 			
 		} catch (Exception ex) {
+	        session.clear();
+
 			throw new Exception(ex.getMessage().toString());
 
 		}

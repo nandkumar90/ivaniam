@@ -108,6 +108,31 @@ import javax.persistence.Id;
 		
 		@Column(name="totalequityandnoncontrollinginterests")
 		private String totalequityandnoncontrollinginterests;
+		
+		
+	
+		
+		
+		  
+
+		
+		@Column(name="totalliabilitiesandequity")
+		private String totalliabilitiesandequity;
+		
+		@Column(name="currentdeferredtaxassets")
+		private String currentdeferredtaxassets;
+		
+		@Column(name="noncurrentdeferredtaxassets")
+		private String noncurrentdeferredtaxassets;
+		
+		@Column(name="dividendspayable")
+		private String dividendspayable;
+				
+		@Column(name="currentdeferredtaxliabilities")
+		private String currentdeferredtaxliabilities;
+				
+		@Column(name="noncurrentdeferredtaxliabilities")
+		private String noncurrentdeferredtaxliabilities;
 
 		public String getId() {
 			return id;
@@ -364,6 +389,68 @@ import javax.persistence.Id;
 		public void setTotalequityandnoncontrollinginterests(String totalequityandnoncontrollinginterests) {
 			this.totalequityandnoncontrollinginterests = totalequityandnoncontrollinginterests;
 		}
+		
+		
+		public String getTotalliabilitiesandequity() {
+			return totalliabilitiesandequity;
+		}
+
+		public void setTotalliabilitiesandequity(String totalliabilitiesandequity) {
+			this.totalliabilitiesandequity = totalliabilitiesandequity;
+		}
+		
+		
+		public String getCurrentdeferredtaxassets() {
+			return currentdeferredtaxassets;
+		}
+
+		public void setCurrentdeferredtaxassets(String currentdeferredtaxassets) {
+			this.currentdeferredtaxassets = currentdeferredtaxassets;
+		}
+		
+		
+		public String getNoncurrentdeferredtaxassets() {
+			return noncurrentdeferredtaxassets;
+		}
+
+		public void setNoncurrentdeferredtaxassets(String noncurrentdeferredtaxassets) {
+			this.noncurrentdeferredtaxassets = noncurrentdeferredtaxassets;
+		}
+		
+		
+		public String getDividendspayable() {
+			return dividendspayable;
+		}
+
+		public void setDividendspayable(String dividendspayable) {
+			this.dividendspayable = dividendspayable;
+		}
+		
+
+		
+		
+		public String getCurrentdeferredtaxliabilities() {
+			return currentdeferredtaxliabilities;
+		}
+
+		public void setCurrentdeferredtaxliabilities(String currentdeferredtaxliabilities) {
+			this.currentdeferredtaxliabilities = currentdeferredtaxliabilities;
+		}
+		
+		
+		public String getNoncurrentdeferredtaxliabilities() {
+			return noncurrentdeferredtaxliabilities;
+		}
+
+		public void setNoncurrentdeferredtaxliabilities(String noncurrentdeferredtaxliabilities) {
+			this.noncurrentdeferredtaxliabilities = noncurrentdeferredtaxliabilities;
+		}
+		
+		
+		
+
+		
+
 		
 
 }

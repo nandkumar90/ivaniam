@@ -74,6 +74,8 @@ public class IvaniumFinancialService {
 			final String uri = "http://localhost:8080/springrestexample/employees.json";
 			String line = "";
 			HttpHeaders headers = new HttpHeaders();
+			headers.add("Authorization",
+					"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
 			
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
@@ -136,6 +138,10 @@ public class IvaniumFinancialService {
 			String line = "";
 			HttpHeaders headers = new HttpHeaders();
 			//set header 
+			headers.add("Authorization",
+					"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
+			
+			//headers = "http://localhost:8080/ivanium//fact/getAllExternalData";
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			StandardFinancialIncomeStatmentDTO financialIncomedto=new StandardFinancialIncomeStatmentDTO();
@@ -153,6 +159,7 @@ public class IvaniumFinancialService {
 							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
 									+ fiscalYear + "&" + fiscalQuarter,
 							HttpMethod.GET, request, StandardIncomeStatment.class);
+
 					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
 							+ fiscalYear + "&" + fiscalQuarter;
 					System.out.println(tesrtUrl);
@@ -167,7 +174,7 @@ public class IvaniumFinancialService {
 						
 						switch(tagName) {
 						
-						case "operatingrevenue":{financialIncomedto.setOperatingcostofrevenue(tag);break;}
+						case "operatingrevenue":{financialIncomedto.setOperatingrevenue(tag);break;}
 						case "otherrevenue":{financialIncomedto.setOtherrevenue(tag);break;}
 					    case "totalrevenue":{financialIncomedto.setTotalrevenue(tag);break;}
 						case "operatingcostofrevenue":{financialIncomedto.setOperatingcostofrevenue(tag);break;}
@@ -179,7 +186,7 @@ public class IvaniumFinancialService {
 						case "explorationexpense":{financialIncomedto.setExplorationexpense(tag);break;}
 						case "depreciationexpense":{financialIncomedto.setDepreciationexpense(tag);break;}
 						case "impairmentexpense":{financialIncomedto.setImpairmentexpense(tag);break;}
-						case "otherspecialcharges":{financialIncomedto.setOtherspecialcharges(tag); break;}
+						//case "otherspecialcharges":{financialIncomedto.setOtherspecialcharges(tag); break;}
 						case "totaloperatingexpenses":{financialIncomedto.setTotaloperatingexpenses(tag);break;}
 						case "totaloperatingincome":{financialIncomedto.setTotaloperatingincome(tag);break;}
 						case "totalinterestexpense":{financialIncomedto.setTotalinterestexpense(tag);break;}
@@ -204,64 +211,6 @@ public class IvaniumFinancialService {
 						
 					}
 					delegate.saveFinancialIncomeData(financialIncomedto);
-
-					if ((crrentPage != totalPage) && (totalPage > 1)) {
-						crrentPage += 1;
-						String urlAttr = ("page_index=" + crrentPage);
-						ResponseEntity<StandardIncomeStatment> results = restTemplate.exchange(
-								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
-										+ fiscalYear + "&" + fiscalQuarter + "&page_index=" + crrentPage,
-								HttpMethod.GET, request, StandardIncomeStatment.class);
-						data = result.getBody();
-						crrentPage = data.getCurrent_page();
-						List<FinancialIncomeStatmentDTO> IncomeStatments = data.getData();
-						StandardFinancialIncomeStatmentDTO financialIncomedtonext=new StandardFinancialIncomeStatmentDTO();
-						financialIncomedto.setStatement("StandardIncomeStatment");
-						financialIncomedto.setTicker("EOG");
-						for (FinancialIncomeStatmentDTO financialIncomeStatmentDTO : IncomeStatments) {
-							String tagName=financialIncomeStatmentDTO.getTag();
-							String tag=financialIncomeStatmentDTO.getValue();
-							
-							switch(tagName) {
-							case "operatingrevenue":{financialIncomedto.setOperatingcostofrevenue(tag);break;}
-							case "otherrevenue":{financialIncomedto.setOtherrevenue(tag);break;}
-						    case "totalrevenue":{financialIncomedto.setTotalrevenue(tag);break;}
-							case "operatingcostofrevenue":{financialIncomedto.setOperatingcostofrevenue(tag);break;}
-							case "othercostofrevenue":{financialIncomedto.setOthercostofrevenue(tag);break;}
-							case "totalcostofrevenue":{financialIncomedto.setTotalcostofrevenue(tag);break;}
-							case "totalgrossprofit":{financialIncomedto.setTotalgrossprofit(tag);break;}
-							case "sgaexpense":{financialIncomedto.setSgaexpense(tag);break;}
-							case "marketingexpense":{financialIncomedto.setMarketingexpense(tag);break;}
-							case "explorationexpense":{financialIncomedto.setExplorationexpense(tag);break;}
-							case "depreciationexpense":{financialIncomedto.setDepreciationexpense(tag);break;}
-							case "impairmentexpense":{financialIncomedto.setImpairmentexpense(tag);break;}
-							case "otherspecialcharges":{financialIncomedto.setOtherspecialcharges(tag); break;}
-							case "totaloperatingexpenses":{financialIncomedto.setTotaloperatingexpenses(tag);break;}
-							case "totaloperatingincome":{financialIncomedto.setTotaloperatingincome(tag);break;}
-							case "totalinterestexpense":{financialIncomedto.setTotalinterestexpense(tag);break;}
-							case "otherincome":{financialIncomedto.setOtherincome(tag);break;}
-							case "totalotherincome":{financialIncomedto.setTotalotherincome(tag);break;}
-							case "totalpretaxincome":{financialIncomedto.setTotalpretaxincome(tag);break;}
-							case "incometaxexpense":{financialIncomedto.setIncometaxexpense(tag);break;}
-							case "netincomecontinuing":{financialIncomedto.setNetincomecontinuing(tag);break;}
-							case "netincome":{financialIncomedto.setNetincome(tag);break;}
-							case "netincometocommon":{financialIncomedto.setNetincometocommon(tag);break;}
-							case "weightedavebasicsharesos":{financialIncomedto.setWeightedavebasicsharesos(tag);break;}
-							case "basiceps":{financialIncomedto.setBasiceps(tag);break;}
-							case "weightedavedilutedsharesos":{financialIncomedto.setWeightedavedilutedsharesos(tag);break;}
-							case "dilutedeps":{financialIncomedto.setDilutedeps(tag);break;}
-
-							case "weightedavebasicdilutedsharesos":{financialIncomedto.setWeightedavebasicdilutedsharesos(tag);break;}
-							case "basicdilutedeps":{financialIncomedto.setBasicdilutedeps(tag);break;}
-							case "cashdividendspershare":{financialIncomedto.setCashdividendspershare(tag);break;}
-							
-							
-							}
-							
-						}
-						delegate.saveFinancialIncomeData(financialIncomedtonext);
-
-					}
 
 					// System.out.println(data);
 				}
@@ -288,6 +237,11 @@ public class IvaniumFinancialService {
 
 				int crrentPage = 0;
 				int totalPage = 0;
+				
+				
+				
+				
+				
 				List<FinancialIncomeStatmentDTO> factIngredientDTOs = new ArrayList<>();
 				Map<String, Integer> pagedetail = new HashMap<>();
 				List<FinancialIncomeStatmentDTO> factIngredients = null;
@@ -295,69 +249,199 @@ public class IvaniumFinancialService {
 				String line = "";
 				HttpHeaders headers = new HttpHeaders();
 				//set header 
+				headers.add("Authorization",
+						"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
+				
+				//headers = "http://localhost:8080/ivanium//fact/getAllExternalData";
 				HttpEntity<String> request = new HttpEntity<String>(headers);
 				RestTemplate restTemplate = new RestTemplate();
-				CalculationsDTO financialIncomedto=new CalculationsDTO();
-				financialIncomedto.setStatement("StandardIncomeStatment");
-				financialIncomedto.setTicker("EOG");
+				
+				
+			
+				CalculationsDTO caculationto = new CalculationsDTO();
+				
+				
+				//StandardFinancialIncomeStatmentDTO financialIncomedto=new StandardFinancialIncomeStatmentDTO();
+				caculationto.setStatement("StandardIncomeStatment");
+				caculationto.setTicker("EOG");
+									
+				
+			
+				
+
+			
 				for (int z = 0; z <= 7; z++) {
 					String fiscalYear = year[z];
-					financialIncomedto.setFiscal_year(fiscalYear);
+					caculationto.setFiscal_year(fiscalYear);
 
 					for (int i = 0; i <= 4; i++) {
-						financialIncomedto.setFiscal_period(period[i]);
+						
+						caculationto.setFiscal_period(period[i]);
 
 						String fiscalQuarter = "fiscal_period=" + period[i];
 						ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
-								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
+								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=calculations&fiscal_year="
 										+ fiscalYear + "&" + fiscalQuarter,
 								HttpMethod.GET, request, StandardIncomeStatment.class);
-						String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
+						String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=calculations&fiscal_year="
 								+ fiscalYear + "&" + fiscalQuarter;
+						
+						
 						System.out.println(tesrtUrl);
 						StandardIncomeStatment data = result.getBody();
 						crrentPage = data.getCurrent_page();
 						totalPage = data.getTotal_pages();
 						List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
+						//delegate.saveFinancialIncomeData(IncomeStatment);
+						
+						/*for (FinancialIncomeStatmentDTO financialIncomeStatmentDTO : IncomeStatment) {
+
+							String tagName = financialIncomeStatmentDTO.getTag();
+							System.out.println("case \"" + tagName + "\":{caculationto.set" + tagName.substring(0, 1).toUpperCase() + tagName.substring(1) + "(tag);break;}");
+						}*/
 						
 						for (FinancialIncomeStatmentDTO financialIncomeStatmentDTO : IncomeStatment) {
-							String tag=financialIncomeStatmentDTO.getTag();
-							String tagValue=financialIncomeStatmentDTO.getValue();
-
-							switch(tag) {
+							
+							String tagName=financialIncomeStatmentDTO.getTag();
+							String tag=financialIncomeStatmentDTO.getValue();	
+							
+												
+								switch(tagName) {
 							
 							//need to define all case for all instance parameter
+								
+								case "revenuegrowth":{caculationto.setRevenuegrowth(tag);break;}
+								case "nopat":{caculationto.setNopat(tag);break;}
+								case "nopatmargin":{caculationto.setNopatmargin(tag);break;}
+								case "investedcapital":{caculationto.setInvestedcapital(tag);break;}
+								case "investedcapitalturnover":{caculationto.setInvestedcapitalturnover(tag);break;}
+								case "investedcapitalincreasedecrease":{caculationto.setInvestedcapitalincreasedecrease(tag);break;}
+								case "freecashflow":{caculationto.setFreecashflow(tag);break;}
+								case "netnonopex":{caculationto.setNetnonopex(tag);break;}
+								case "netnonopobligations":{caculationto.setNetnonopobligations(tag);break;}
+								case "ebit":{caculationto.setEbit(tag);break;}
+								case "depreciationandamortization":{caculationto.setDepreciationandamortization(tag);break;}
+								case "ebitda":{caculationto.setEbitda(tag);break;}
+								case "capex":{caculationto.setCapex(tag);break;}
+								case "dfcfnwc":{caculationto.setDfcfnwc(tag);break;}
+								case "dfnwc":{caculationto.setDfnwc(tag);break;}
+								case "nwc":{caculationto.setNwc(tag);break;}
+								case "debt":{caculationto.setDebt(tag);break;}
+								case "ltdebtandcapleases":{caculationto.setLtdebtandcapleases(tag);break;}
+								case "netdebt":{caculationto.setNetdebt(tag);break;}
+								case "totalcapital":{caculationto.setTotalcapital(tag);break;}
+								case "bookvaluepershare":{caculationto.setBookvaluepershare(tag);break;}
+								case "tangbookvaluepershare":{caculationto.setTangbookvaluepershare(tag);break;}
+								case "marketcap":{caculationto.setMarketcap(tag);break;}
+								case "enterprisevalue":{caculationto.setEnterprisevalue(tag);break;}
+								case "pricetobook":{caculationto.setPricetobook(tag);break;}
+								case "pricetotangiblebook":{caculationto.setPricetotangiblebook(tag);break;}
+								case "pricetorevenue":{caculationto.setPricetorevenue(tag);break;}
+								case "pricetoearnings":{caculationto.setPricetoearnings(tag);break;}
+								case "dividendyield":{caculationto.setDividendyield(tag);break;}
+								case "earningsyield":{caculationto.setEarningsyield(tag);break;}
+								case "evtoinvestedcapital":{caculationto.setEvtoinvestedcapital(tag);break;}
+								case "evtorevenue":{caculationto.setEvtorevenue(tag);break;}
+								case "evtoebitda":{caculationto.setEvtoebitda(tag);break;}
+								case "evtoebit":{caculationto.setEvtoebit(tag);break;}
+								case "evtonopat":{caculationto.setEvtonopat(tag);break;}
+								case "evtoocf":{caculationto.setEvtoocf(tag);break;}
+								case "evtofcff":{caculationto.setEvtofcff(tag);break;}
+								case "ebitdagrowth":{caculationto.setEbitdagrowth(tag);break;}
+								case "ebitgrowth":{caculationto.setEbitgrowth(tag);break;}
+								case "nopatgrowth":{caculationto.setNopatgrowth(tag);break;}
+								case "netincomegrowth":{caculationto.setNetincomegrowth(tag);break;}
+								case "epsgrowth":{caculationto.setEpsgrowth(tag);break;}
+								case "ocfgrowth":{caculationto.setOcfgrowth(tag);break;}
+								case "fcffgrowth":{caculationto.setFcffgrowth(tag);break;}
+								case "investedcapitalgrowth":{caculationto.setInvestedcapitalgrowth(tag);break;}
+								case "revenueqoqgrowth":{caculationto.setRevenueqoqgrowth(tag);break;}
+								case "ebitdaqoqgrowth":{caculationto.setEbitdaqoqgrowth(tag);break;}
+								case "ebitqoqgrowth":{caculationto.setEbitqoqgrowth(tag);break;}
+								case "nopatqoqgrowth":{caculationto.setNopatqoqgrowth(tag);break;}
+								case "netincomeqoqgrowth":{caculationto.setNetincomeqoqgrowth(tag);break;}
+								case "epsqoqgrowth":{caculationto.setEpsqoqgrowth(tag);break;}
+								case "ocfqoqgrowth":{caculationto.setOcfqoqgrowth(tag);break;}
+								case "fcffqoqgrowth":{caculationto.setFcffqoqgrowth(tag);break;}
+								case "investedcapitalqoqgrowth":{caculationto.setInvestedcapitalqoqgrowth(tag);break;}
+								case "grossmargin":{caculationto.setGrossmargin(tag);break;}
+								case "ebitdamargin":{caculationto.setEbitdamargin(tag);break;}
+								case "operatingmargin":{caculationto.setOperatingmargin(tag);break;}
+								case "ebitmargin":{caculationto.setEbitmargin(tag);break;}
+								case "profitmargin":{caculationto.setProfitmargin(tag);break;}
+								case "costofrevtorevenue":{caculationto.setCostofrevtorevenue(tag);break;}
+								case "sgaextorevenue":{caculationto.setSgaextorevenue(tag);break;}
+								case "rdextorevenue":{caculationto.setRdextorevenue(tag);break;}
+								case "opextorevenue":{caculationto.setOpextorevenue(tag);break;}
+								case "taxburdenpct":{caculationto.setTaxburdenpct(tag);break;}
+								case "interestburdenpct":{caculationto.setInterestburdenpct(tag);break;}
+								case "efftaxrate":{caculationto.setEfftaxrate(tag);break;}
+								case "assetturnover":{caculationto.setAssetturnover(tag);break;}
+								case "arturnover":{caculationto.setArturnover(tag);break;}
+								case "invturnover":{caculationto.setInvturnover(tag);break;}
+								case "faturnover":{caculationto.setFaturnover(tag);break;}
+								case "apturnover":{caculationto.setApturnover(tag);break;}
+								case "dso":{caculationto.setDso(tag);break;}
+								case "dio":{caculationto.setDio(tag);break;}
+								case "dpo":{caculationto.setDpo(tag);break;}
+								case "ccc":{caculationto.setCcc(tag);break;}
+								case "finleverage":{caculationto.setFinleverage(tag);break;}
+								case "leverageratio":{caculationto.setLeverageratio(tag);break;}
+								case "compoundleveragefactor":{caculationto.setCompoundleveragefactor(tag);break;}
+								case "ltdebttoequity":{caculationto.setLtdebttoequity(tag);break;}
+								case "debttoequity":{caculationto.setDebttoequity(tag);break;}
+								case "roic":{caculationto.setRoic(tag);break;}
+								case "nnep":{caculationto.setNnep(tag);break;}
+								case "roicnnepspread":{caculationto.setRoicnnepspread(tag);break;}
+								case "rnnoa":{caculationto.setRnnoa(tag);break;}
+								case "roe":{caculationto.setRoe(tag);break;}
+								case "croic":{caculationto.setCroic(tag);break;}
+								case "oroa":{caculationto.setOroa(tag);break;}
+								case "roa":{caculationto.setRoa(tag);break;}
+								case "noncontrollinginterestsharingratio":{caculationto.setNoncontrollinginterestsharingratio(tag);break;}
+								case "roce":{caculationto.setRoce(tag);break;}
+								case "divpayoutratio":{caculationto.setDivpayoutratio(tag);break;}
+								case "augmentedpayoutratio":{caculationto.setAugmentedpayoutratio(tag);break;}
+								case "ocftocapex":{caculationto.setOcftocapex(tag);break;}
+								case "stdebttocap":{caculationto.setStdebttocap(tag);break;}
+								case "ltdebttocap":{caculationto.setLtdebttocap(tag);break;}
+								case "debttototalcapital":{caculationto.setDebttototalcapital(tag);break;}
+								case "preferredtocap":{caculationto.setPreferredtocap(tag);break;}
+								case "noncontrolinttocap":{caculationto.setNoncontrolinttocap(tag);break;}
+								case "commontocap":{caculationto.setCommontocap(tag);break;}
+								case "debttoebitda":{caculationto.setDebttoebitda(tag);break;}						     	
+						     									
+								
+								
 							
 							
 							}
 							
 						}
-						delegate.saveCalculationData(financialIncomedto);
-
+						delegate.saveCalculationData(caculationto);
+						
 						if ((crrentPage != totalPage) && (totalPage > 1)) {
 							crrentPage += 1;
 							String urlAttr = ("page_index=" + crrentPage);
 							ResponseEntity<StandardIncomeStatment> results = restTemplate.exchange(
-									"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
+									"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=cash_flow_statement&fiscal_year="
 											+ fiscalYear + "&" + fiscalQuarter + "&page_index=" + crrentPage,
 									HttpMethod.GET, request, StandardIncomeStatment.class);
 							data = result.getBody();
 							crrentPage = data.getCurrent_page();
 							List<FinancialIncomeStatmentDTO> IncomeStatments = data.getData();
 							CalculationsDTO financialIncomeNextdto=new CalculationsDTO();
-							financialIncomedto.setStatement("StandardIncomeStatment");
-							financialIncomedto.setTicker("EOG");
-							for (FinancialIncomeStatmentDTO financialIncomeStatmentDTO : IncomeStatments) {
-								String tag=financialIncomeStatmentDTO.getTag();
-								switch(tag) {
-								//
-								
-								}
-								
-							}
-							delegate.saveCalculationData(financialIncomeNextdto);
+							//delegate.saveFinancialIncomeData(cashflowNext);
 
 						}
+
+					
+							
+							
+							
+					
+						
+						
 
 						// System.out.println(data);
 					}
@@ -383,16 +467,46 @@ public class IvaniumFinancialService {
 
 			int crrentPage = 0;
 			int totalPage = 0;
-			CashFlowStatementDTO cashflow=new CashFlowStatementDTO();
-
+			
+			
+			
+			
+			
+			
+			List<FinancialIncomeStatmentDTO> factIngredientDTOs = new ArrayList<>();
+			Map<String, Integer> pagedetail = new HashMap<>();
+			List<FinancialIncomeStatmentDTO> factIngredients = null;
+			final String uri = "http://localhost:8080/springrestexample/employees.json";
+			String line = "";
 			HttpHeaders headers = new HttpHeaders();
 			//set header 
+			headers.add("Authorization",
+					"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
+			
+			//headers = "http://localhost:8080/ivanium//fact/getAllExternalData";
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
+			
+			
+			CashFlowStatementDTO cashflow = new CashFlowStatementDTO();
+			
+			
+			//StandardFinancialIncomeStatmentDTO financialIncomedto=new StandardFinancialIncomeStatmentDTO();
+			cashflow.setStatement("StandardIncomeStatment");
+			cashflow.setTicker("EOG");
+								
+			
+		
+			
+
+		
 			for (int z = 0; z <= 7; z++) {
 				String fiscalYear = year[z];
+				cashflow.setFiscal_year(fiscalYear);
 
 				for (int i = 0; i <= 4; i++) {
+					
+					cashflow.setFiscal_period(period[i]);
 
 					String fiscalQuarter = "fiscal_period=" + period[i];
 					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
@@ -408,18 +522,55 @@ public class IvaniumFinancialService {
 					List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
 					//delegate.saveFinancialIncomeData(IncomeStatment);
 					for (FinancialIncomeStatmentDTO financialIncomeStatmentDTO : IncomeStatment) {
-						String tag=financialIncomeStatmentDTO.getTag();
-						String tagValue=financialIncomeStatmentDTO.getValue();
-
-						switch(tag) {
 						
+						String tagName=financialIncomeStatmentDTO.getTag();
+						String tag=financialIncomeStatmentDTO.getValue();	
+						
+						
+						
+						
+						
+							switch(tagName) {
+						
+					
+						
+						
+						
+						case "netincome":{cashflow.setNetincome(tag);break;}
+						case "netincomecontinuing":{cashflow.setNetincomecontinuing(tag);break;}
+						case "depreciationexpense":{cashflow.setDepreciationexpense(tag);break;}
+						case "noncashadjustmentstonetincome":{cashflow.setNoncashadjustmentstonetincome(tag);break;}
+						case "increasedecreaseinoperatingcapital":{cashflow.setIncreasedecreaseinoperatingcapital(tag);break;}
+						case "netcashfromcontinuingoperatingactivities":{cashflow.setNetcashfromcontinuingoperatingactivities(tag);break;}
+						case "netcashfromoperatingactivities":{cashflow.setNetcashfromoperatingactivities(tag);break;}
+						case "purchaseofplantpropertyandequipment":{cashflow.setPurchaseofplantpropertyandequipment(tag);break;}
+						case "acquisitions":{cashflow.setAcquisitions(tag);break;}
+						case "divestitures":{cashflow.setDivestitures(tag);break;}
+						case "otherinvestingactivitiesnet":{cashflow.setOtherinvestingactivitiesnet(tag);break;}
+						case "netcashfromcontinuinginvestingactivities":{cashflow.setNetcashfromcontinuinginvestingactivities(tag);break;}
+						case "netcashfrominvestingactivities":{cashflow.setNetcashfrominvestingactivities(tag);break;}
+						case "repaymentofdebt":{cashflow.setRepaymentofdebt(tag);break;}
+						case "repurchaseofcommonequity":{cashflow.setRepurchaseofcommonequity(tag);break;}
+						case "paymentofdividends":{cashflow.setPaymentofdividends(tag);break;}
+						case "issuanceofdebt":{cashflow.setIssuanceofdebt(tag);break;}
+						case "issuanceofcommonequity":{cashflow.setIssuanceofcommonequity(tag);break;}
+						case "otherfinancingactivitiesnet":{cashflow.setOtherfinancingactivitiesnet(tag);break;}
+						case "netcashfromcontinuingfinancingactivities":{cashflow.setNetcashfromcontinuingfinancingactivities(tag);break;}
+						case "netcashfromfinancingactivities":{cashflow.setNetcashfromfinancingactivities(tag);break;}
+						case "netchangeincash":{cashflow.setNetchangeincash(tag);break;}
+					
+											
 						//need to define all case for all instance parameter
 						
 						
 						}
 						
 					}
-
+					
+					delegate.saveFinancialIncomeData(cashflow);
+					
+					
+					
 					if ((crrentPage != totalPage) && (totalPage > 1)) {
 						crrentPage += 1;
 						String urlAttr = ("page_index=" + crrentPage);
@@ -431,7 +582,7 @@ public class IvaniumFinancialService {
 						crrentPage = data.getCurrent_page();
 						List<FinancialIncomeStatmentDTO> IncomeStatments = data.getData();
 						CashFlowStatementDTO cashflowNext=new CashFlowStatementDTO();
-						delegate.saveFinancialIncomeData(cashflowNext);
+						//delegate.saveFinancialIncomeData(cashflowNext);
 
 					}
 
@@ -453,44 +604,101 @@ public class IvaniumFinancialService {
 	// bi-weekly ownership
 	@RequestMapping(value = "/fact/balancesheet", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String getIntiutionalOwnershipFacts() {
+		
+		
 		try {
 			String[] year = { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017" };
 			String[] period = { "Q1", "Q2", "Q3", "Q4", "FY" };
 
 			int crrentPage = 0;
 			int totalPage = 0;
-			
-			HttpHeaders headers = new HttpHeaders();
-			//set header 
-			HttpEntity<String> request = new HttpEntity<String>(headers);
-			RestTemplate restTemplate = new RestTemplate();
-			for (int z = 0; z <= 7; z++) {
-				String fiscalYear = year[z];
+				
+		List<FinancialIncomeStatmentDTO> factIngredientDTOs = new ArrayList<>();
+		Map<String, Integer> pagedetail = new HashMap<>();
+		List<FinancialIncomeStatmentDTO> factIngredients = null;
+		final String uri = "http://localhost:8080/springrestexample/employees.json";
+		String line = "";
+		HttpHeaders headers = new HttpHeaders();
+		//set header 
+		headers.add("Authorization",
+				"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
+		
+		//headers = "http://localhost:8080/ivanium//fact/getAllExternalData";
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		RestTemplate restTemplate = new RestTemplate();
+		
+		
+		BalanceSheetDTO balanceSheetDTO = new BalanceSheetDTO();
+		
+		
+		//StandardFinancialIncomeStatmentDTO financialIncomedto=new StandardFinancialIncomeStatmentDTO();
+		balanceSheetDTO.setStatement("StandardIncomeStatment");
+		balanceSheetDTO.setTicker("EOG");
+		for (int z = 0; z <= 7; z++) {
+			String fiscalYear = year[z];
+			balanceSheetDTO.setFiscal_year(fiscalYear);
 
-				for (int i = 0; i <= 4; i++) {
+			for (int i = 0; i <= 4; i++) {
+				balanceSheetDTO.setFiscal_period(period[i]);
 
-					String fiscalQuarter = "fiscal_period=" + period[i];
-					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
-							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
-									+ fiscalYear + "&" + fiscalQuarter,
-							HttpMethod.GET, request, StandardIncomeStatment.class);
-					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
-							+ fiscalYear + "&" + fiscalQuarter;
-					System.out.println(tesrtUrl);
-					StandardIncomeStatment data = result.getBody();
-					crrentPage = data.getCurrent_page();
-					totalPage = data.getTotal_pages();
-					List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
-					BalanceSheetDTO balanceSheetDTO=new BalanceSheetDTO();
-					for (FinancialIncomeStatmentDTO financialIncomeStatmentDTO : IncomeStatment) {
-						String tag=financialIncomeStatmentDTO.getTag();
-						String tagValue=financialIncomeStatmentDTO.getValue();
+				String fiscalQuarter = "fiscal_period=" + period[i];
+				ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
+						"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
+								+ fiscalYear + "&" + fiscalQuarter,
+						HttpMethod.GET, request, StandardIncomeStatment.class);
 
-						switch(tag) {
+				String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
+						+ fiscalYear + "&" + fiscalQuarter;
+				System.out.println(tesrtUrl);
+				StandardIncomeStatment data = result.getBody();
+				crrentPage = data.getCurrent_page();
+				totalPage = data.getTotal_pages();
+				List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
+				
+				for (FinancialIncomeStatmentDTO financialIncomeStatmentDTO : IncomeStatment) {
+					
+				
+					String tagName=financialIncomeStatmentDTO.getTag();
+					String tag=financialIncomeStatmentDTO.getValue();				
+						switch(tagName) {
 						
 						//need to define all case for all instance parameter
 						
 						
+						case "cashandequivalents":{balanceSheetDTO.setCashandequivalents(tag);break;}
+						case "accountsreceivable":{balanceSheetDTO.setAccountsreceivable(tag);break;}
+						case "netinventory":{balanceSheetDTO.setNetinventory(tag);break;}
+						case "othercurrentassets":{balanceSheetDTO.setOthercurrentassets(tag);break;}
+						case "totalcurrentassets":{balanceSheetDTO.setTotalcurrentassets(tag);break;}
+						case "grossppe":{balanceSheetDTO.setGrossppe(tag);break;}
+						case "accumulateddepreciation":{balanceSheetDTO.setAccumulateddepreciation(tag);break;}
+						case "netppe":{balanceSheetDTO.setNetppe(tag);break;}
+						case "othernoncurrentassets":{balanceSheetDTO.setOthernoncurrentassets(tag);break;}
+						case "totalnoncurrentassets":{balanceSheetDTO.setTotalnoncurrentassets(tag);break;}
+						case "totalassets":{balanceSheetDTO.setTotalassets(tag);break;}
+						case "shorttermdebt":{balanceSheetDTO.setShorttermdebt(tag);break;}
+						case "accountspayable":{balanceSheetDTO.setAccountspayable(tag);break;}
+						case "othercurrentliabilities":{balanceSheetDTO.setOthercurrentliabilities(tag);break;}
+						case "totalcurrentliabilities":{balanceSheetDTO.setTotalcurrentliabilities(tag);break;}
+						case "longtermdebt":{balanceSheetDTO.setLongtermdebt(tag);break;}
+						case "othernoncurrentliabilities":{balanceSheetDTO.setOthernoncurrentliabilities(tag);break;}
+						case "totalnoncurrentliabilities":{balanceSheetDTO.setTotalnoncurrentliabilities(tag);break;}
+						case "totalliabilities":{balanceSheetDTO.setTotalliabilities(tag);break;}
+						case "commitmentsandcontingencies":{balanceSheetDTO.setCommitmentsandcontingencies(tag);break;}
+						case "commonequity":{balanceSheetDTO.setCommonequity(tag);break;}
+						case "retainedearnings":{balanceSheetDTO.setRetainedearnings(tag);break;}
+						case "treasurystock":{balanceSheetDTO.setTreasurystock(tag);break;}
+						case "aoci":{balanceSheetDTO.setAoci(tag);break;}
+						case "totalcommonequity":{balanceSheetDTO.setTotalcommonequity(tag);break;}
+						case "totalequity":{balanceSheetDTO.setTotalequity(tag);break;}
+						case "totalequityandnoncontrollinginterests":{balanceSheetDTO.setTotalequityandnoncontrollinginterests(tag);break;}
+						case "totalliabilitiesandequity":{balanceSheetDTO.setTotalliabilitiesandequity(tag);break;}
+						case "currentdeferredtaxassets":{balanceSheetDTO.setCurrentdeferredtaxassets(tag);break;}
+						case "noncurrentdeferredtaxassets":{balanceSheetDTO.setNoncurrentdeferredtaxassets(tag);break;}
+						case "dividendspayable":{balanceSheetDTO.setDividendspayable(tag);break;}
+						case "currentdeferredtaxliabilities":{balanceSheetDTO.setCurrentdeferredtaxliabilities(tag);break;}
+						case "noncurrentdeferredtaxliabilities":{balanceSheetDTO.setNoncurrentdeferredtaxliabilities(tag);break;}
+									
 						}
 						
 					}
@@ -536,6 +744,8 @@ public class IvaniumFinancialService {
 			
 			HttpHeaders headers = new HttpHeaders();
 			//set header 
+			headers.add("Authorization",
+					"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 
@@ -633,6 +843,8 @@ public class IvaniumFinancialService {
 			
 			HttpHeaders headers = new HttpHeaders();
 			//set header 
+			headers.add("Authorization",
+					"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
@@ -678,6 +890,8 @@ public class IvaniumFinancialService {
 			
 			HttpHeaders headers = new HttpHeaders();
 			//set header 
+			headers.add("Authorization",
+					"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<StandardNewsDTO> result = restTemplate.exchange(
@@ -724,6 +938,8 @@ public class IvaniumFinancialService {
 			
 			HttpHeaders headers = new HttpHeaders();
 			//set header 
+			headers.add("Authorization",
+					"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
@@ -769,6 +985,8 @@ public class IvaniumFinancialService {
 			int totalPage = 0;
 			HttpHeaders headers = new HttpHeaders();
 			//set header 
+			headers.add("Authorization",
+					"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<StandardInstuitionalOwnershipDTO> result = restTemplate.exchange(
@@ -815,7 +1033,9 @@ public class IvaniumFinancialService {
 		
 			
 			HttpHeaders headers = new HttpHeaders();
-			//set header 
+			//set header
+			headers.add("Authorization",
+					"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<StandardCompaniesData> result = restTemplate.exchange(

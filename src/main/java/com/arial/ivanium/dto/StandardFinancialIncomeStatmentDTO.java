@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Table(name = "financial_income_statement")
 public class StandardFinancialIncomeStatmentDTO {
 	@Id
-	@Column(name = " id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private String id;
 
@@ -27,8 +27,8 @@ public class StandardFinancialIncomeStatmentDTO {
 	@Column(name = "fiscal_Period")
 	private String fiscal_period;
 
-	@Column(name = "operatingrevenu")
-	private String operatingrevenu;
+	@Column(name = "operatingrevenue")
+	private String operatingrevenue;
 
 	@Column(name = "otherrevenue")
 	private String otherrevenue;
@@ -114,8 +114,8 @@ public class StandardFinancialIncomeStatmentDTO {
 	@Column(name = "cashdividendspershare")
 	private String cashdividendspershare;
 	
-	@Column(name = "otherspecialcharges")
-	private String otherspecialcharges;
+	//@Column(name = "otherspecialcharges")
+	//private String otherspecialcharges;
 
 	public String getId() {
 		return id;
@@ -157,12 +157,12 @@ public class StandardFinancialIncomeStatmentDTO {
 		this.fiscal_period = fiscal_period;
 	}
 
-	public String getOperatingrevenu() {
-		return operatingrevenu;
+	public String getOperatingrevenue() {
+		return operatingrevenue;
 	}
 
-	public void setOperatingrevenu(String operatingrevenu) {
-		this.operatingrevenu = operatingrevenu;
+	public void setOperatingrevenue(String operatingrevenue) {
+		this.operatingrevenue = operatingrevenue;
 	}
 
 	public String getOtherrevenue() {
@@ -389,13 +389,13 @@ public class StandardFinancialIncomeStatmentDTO {
 		this.cashdividendspershare = cashdividendspershare;
 	}
 
-	public String getOtherspecialcharges() {
+	/*public String getOtherspecialcharges() {
 		return otherspecialcharges;
 	}
 
 	public void setOtherspecialcharges(String otherspecialcharges) {
 		this.otherspecialcharges = otherspecialcharges;
-	}
+	}*/
 	
 	
 

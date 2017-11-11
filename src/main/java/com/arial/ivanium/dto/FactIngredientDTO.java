@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="fact_frac_ingredients")
+@Table(name="fact_frac_ingredientstest")
 public class FactIngredientDTO {
 	
 	@Id

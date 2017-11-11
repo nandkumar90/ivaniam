@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="fact_frac_ingredientsTest")
+@Table(name="cash_flow_statement")
 public class CashFlowStatementDTO {
 
 	@Id
@@ -55,6 +55,10 @@ public class CashFlowStatementDTO {
 
 	@Column(name = "netcashfrominvestingactivities")
 	private String netcashfrominvestingactivities;
+	
+	@Column(name = "repaymentofdebt")
+	private String repaymentofdebt;
+	
 	@Column(name = "repurchaseofcommonequity")
 	private String repurchaseofcommonequity;
 
@@ -219,6 +223,17 @@ public class CashFlowStatementDTO {
 	public void setNetcashfrominvestingactivities(String netcashfrominvestingactivities) {
 		this.netcashfrominvestingactivities = netcashfrominvestingactivities;
 	}
+	
+	
+	public String getRepaymentofdebt() {
+		return repaymentofdebt;
+	}
+
+	public void setRepaymentofdebt(String repaymentofdebt) {
+		this.repaymentofdebt = repaymentofdebt;
+	}
+	
+	
 
 	public String getRepurchaseofcommonequity() {
 		return repurchaseofcommonequity;

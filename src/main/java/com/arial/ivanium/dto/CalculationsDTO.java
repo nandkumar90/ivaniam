@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="fact_frac_ingredientsDTO")
+@Table(name="fact_frac_ingredientstest")
 public class CalculationsDTO {
 	@Id
 	@Column(name = " id")
@@ -32,20 +32,28 @@ public class CalculationsDTO {
 
 	@Column(name = "nopat")
 	private String nopat;
+	
 	@Column(name = "nopatmargin")
 	private String nopatmargin;
+	
 	@Column(name = "investedcapital")
 	private String investedcapital;
+	
 	@Column(name = "investedcapitalturnover")
 	private String investedcapitalturnover;
+	
 	@Column(name = "investedcapitalincreasedecrease")
 	private String investedcapitalincreasedecrease;
+	
 	@Column(name = "freecashflow")
 	private String freecashflow;
+	
 	@Column(name = "netnonopex")
 	private String netnonopex;
+	
 	@Column(name = "netnonopobligations")
 	private String netnonopobligations;
+	
 	@Column(name = "ebit")
 	private String ebit;
 	@Column(name = "depreciationandamortization")

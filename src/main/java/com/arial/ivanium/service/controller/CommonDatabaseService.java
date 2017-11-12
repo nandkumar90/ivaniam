@@ -67,6 +67,7 @@ public class CommonDatabaseService {
 
 			HttpHeaders headers = new HttpHeaders();
 			//set header 
+			headers.add("Authorization", "Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 

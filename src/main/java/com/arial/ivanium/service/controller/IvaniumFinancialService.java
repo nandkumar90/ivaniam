@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 import com.arial.ivanium.delegate.DatabaseDelegate;
 import com.arial.ivanium.dto.FactIngredientDTO;
 import com.arial.ivanium.dto.FinancialIncomeStatmentDTO;
+import com.arial.ivanium.dto.Historical_data_Common_DTO;
 import com.arial.ivanium.dto.HistoricaldataDTO;
 import com.arial.ivanium.dto.IntiutionalOwnershipDTO;
 import com.arial.ivanium.dto.NewsDTO;
@@ -851,5 +853,9 @@ public class IvaniumFinancialService {
 		return null;
 
 	}
+	
+	
+	
+	
 
 }

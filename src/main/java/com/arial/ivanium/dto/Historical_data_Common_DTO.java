@@ -10,11 +10,20 @@ import javax.persistence.Table;
 @Entity
 @Table(name="Historical_data")
 public class Historical_data_Common_DTO {
+	@Id
+	@Column(name="id")
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private String ID;
+	
+	@Column(name="Ticker")
 	private String Ticker;
+	@Column(name="date")
 	private String date;
+	@Column(name="Close_price")
 	private String Close_price;
+	@Column(name="volume")
 	private String volume;
+	@Column(name="beta")
 	private String beta;
 	
 	public Historical_data_Common_DTO(String ticker) {

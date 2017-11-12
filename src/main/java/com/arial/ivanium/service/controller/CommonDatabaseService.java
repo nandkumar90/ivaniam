@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,29 +47,17 @@ import com.arial.ivanium.dto.StandardNewsDTO;
 @Controller
 public class CommonDatabaseService {
 
-	@Autowired
-	private DatabaseDelegate delegate;
-
+	
 	private SecureRandom random = new SecureRandom();
 
 	public String nextSessionId() {
 		return new BigInteger(130, random).toString(32);
 	}
 
-	@RequestMapping(value = "/fact/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<FactIngredientDTO> getFacts() {
-		try {
-			return delegate.getFactIngredient();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	
+
 	@RequestMapping(value = "/common/daily/historydata", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getHistoryClosedPrice() {
+	public @ResponseBody String getHistoryClosedPrices() {
 		try {
 
 			int crrentPage = 0;
@@ -93,13 +82,13 @@ public class CommonDatabaseService {
 			
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
-				String urlAttr = ("page_index=" + crrentPage);
-				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
-						"https://api.intrinio.com/historical_data?identifier=EOG&item=close_price", HttpMethod.GET,
-						request, HistoricaldataDTO.class);
-				data = result.getBody();
-				crrentPage = data.getCurrent_page();
-				List<HistoricaldataDTO> IncomeStatments = data.getData();
+				String urlAttr = ("page_number =" + crrentPage);
+				ResponseEntity<StandardHistoricalData> results = restTemplate.exchange(
+						"https://api.intrinio.com/historical_data?identifier=EOG&item=close_price&"+urlAttr, HttpMethod.GET,
+						request, StandardHistoricalData.class);
+				StandardHistoricalData datas = results.getBody();
+				crrentPage = datas.getCurrent_page();
+				List<HistoricaldataDTO> IncomeStatments = datas.getData();
 				histomryObjecTmap=setValuesInMap(IncomeStatments,histomryObjecTmap, "close_price" ,"EOG");
 
 			}
@@ -110,21 +99,22 @@ public class CommonDatabaseService {
 					"https://api.intrinio.com/historical_data?identifier=EOG&item=volume", HttpMethod.GET, request,
 					StandardHistoricalData.class);
 			StandardHistoricalData dataVolume = resultVOlume.getBody();
-			crrentPage = data.getCurrent_page();
-			totalPage = data.getTotal_pages();
+			crrentPage = dataVolume.getCurrent_page();
+			totalPage = dataVolume.getTotal_pages();
 			List<HistoricaldataDTO> volume = dataVolume.getData();
 			histomryObjecTmap=setValuesInMap(volume,histomryObjecTmap, "close_price" ,"EOG");
 
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
-				String urlAttr = ("page_index=" + crrentPage);
-				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
-						"https://api.intrinio.com/historical_data?identifier=EOG&item=volume", HttpMethod.GET, request,
-						HistoricaldataDTO.class);
-				data = result.getBody();
-				crrentPage = data.getCurrent_page();
-				List<HistoricaldataDTO> IncomeStatments = data.getData();
+				String urlAttr = ("page_number=" + crrentPage);
+				ResponseEntity<StandardHistoricalData> resultss = restTemplate.exchange(
+						"https://api.intrinio.com/historical_data?identifier=EOG&item=volume"+urlAttr, HttpMethod.GET, request,
+						StandardHistoricalData.class);
+				StandardHistoricalData dataVolumes = resultVOlume.getBody();
+
+				crrentPage = dataVolumes.getCurrent_page();
+				List<HistoricaldataDTO> IncomeStatments = dataVolumes.getData();
 				histomryObjecTmap=setValuesInMap(IncomeStatments,histomryObjecTmap, "close_price" ,"EOG");
 
 			}
@@ -134,27 +124,27 @@ public class CommonDatabaseService {
 					"https://api.intrinio.com/historical_data?identifier=EOG&item=beta", HttpMethod.GET, request,
 					StandardHistoricalData.class);
 			StandardHistoricalData datas = resultBeta.getBody();
-			crrentPage = data.getCurrent_page();
-			totalPage = data.getTotal_pages();
+			crrentPage = datas.getCurrent_page();
+			totalPage = datas.getTotal_pages();
 			List<HistoricaldataDTO> beta = datas.getData();
 			histomryObjecTmap=setValuesInMap(beta,histomryObjecTmap, "close_price" ,"EOG");
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
-				String urlAttr = ("page_index=" + crrentPage);
-				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
-						"https://api.intrinio.com/historical_data?identifier=EOG&item=beta", HttpMethod.GET, request,
-						HistoricaldataDTO.class);
-				data = result.getBody();
-				crrentPage = data.getCurrent_page();
-				List<HistoricaldataDTO> IncomeStatments = data.getData();
+				String urlAttr = ("page_number=" + crrentPage);
+				ResponseEntity<StandardHistoricalData> results = restTemplate.exchange(
+						"https://api.intrinio.com/historical_data?identifier=EOG&item=beta"+urlAttr, HttpMethod.GET, request,
+						StandardHistoricalData.class);
+				StandardHistoricalData dataClosedPrice = results.getBody();
+				crrentPage = dataClosedPrice.getCurrent_page();
+				List<HistoricaldataDTO> IncomeStatments = dataClosedPrice.getData();
 				histomryObjecTmap=setValuesInMap(IncomeStatments,histomryObjecTmap, "close_price" ,"EOG");
 
 			}
 			
 			
 			// System.out.println(data);
-
+			printMap(histomryObjecTmap);
 			// delegate.saveFinancialIncomeData(factIngredientDTOs);
 			return "save done";
 		} catch (Exception e) {
@@ -169,8 +159,9 @@ public class CommonDatabaseService {
 		for (HistoricaldataDTO historicaldataDTO : historicaldataDTOs) {
 			String key=historicaldataDTO.getDate();
 			String value=historicaldataDTO.getValue();
-			if(null !=key)
-			{  Historical_data_Common_DTO common_DTO=map.get(key);
+			if(null !=key && null!=map)
+			{  
+				Historical_data_Common_DTO common_DTO=map.get(key);
 				
 				if(null == common_DTO)
 				{
@@ -205,9 +196,18 @@ public class CommonDatabaseService {
 			
 		}
 		
-		return null;
+		return map;
 		
 		
+	}
+	
+	public static void printMap(Map mp) {
+	    Iterator it = mp.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        System.out.println(pair.getKey() + " = " + pair.getValue());
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
 	}
 
 	

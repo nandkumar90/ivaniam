@@ -735,9 +735,12 @@ public class IvaniumFinancialService {
 
 	}
 
-	// daily script for closed price
+	
 
-	@RequestMapping(value = "/fact/dailyscript/closedprice", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	
+	
+	// daily script for closed price
+/*	@RequestMapping(value = "/fact/dailyscript/closedprice", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String getHistoryClosedPrice() {
 		try {
 
@@ -750,7 +753,6 @@ public class IvaniumFinancialService {
 					"Basic YTAwMzc2MjE1ODM4NWU5MzI2YWY1ZmQwYmM4MzRmNWY6ZTNlYjZlMzc1NGZjMGZkN2Q3ODMxYTViYmRiNTY3Zjk=");
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
-
 			ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
 					"https://api.intrinio.com/historical_data?identifier=EOG&item=close_price", HttpMethod.GET, request,
 					StandardHistoricalData.class);
@@ -758,6 +760,10 @@ public class IvaniumFinancialService {
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
 			List<HistoricaldataDTO> IncomeStatment = data.getData();
+			for (HistoricaldataDTO financialIncomeStatmentDTO : IncomeStatment) {
+				financialIncomeStatmentDTO.setTicker("EOG");
+				financialIncomeStatmentDTO.setItem("close_price");		
+				}
 			delegate.saveDailyScriptClosedPriceData(IncomeStatment);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
@@ -768,26 +774,27 @@ public class IvaniumFinancialService {
 						request, HistoricaldataDTO.class);
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
-				List<HistoricaldataDTO> IncomeStatments = data.getData();
+				List<HistoricaldataDTO> IncomeStatments = data.getData();						
+				for (HistoricaldataDTO financialIncomeStatmentDTO : IncomeStatments) {
+					financialIncomeStatmentDTO.setTicker("EOG");
+					financialIncomeStatmentDTO.setItem("close_price");				
+					}
 				delegate.saveDailyScriptClosedPriceData(IncomeStatments);
-
 			}
-
-			// System.out.println(data);
-
-			// delegate.saveFinancialIncomeData(factIngredientDTOs);
 			return "save done";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+	}*/
 
-	}
-
+	
+	
+	
+	
 	// daily script for volume
-
-	@RequestMapping(value = "/fact/dailyscript/volume", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+/*	@RequestMapping(value = "/fact/dailyscript/volume", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String getdailyscriptVomume() {
 		try {
 
@@ -807,6 +814,10 @@ public class IvaniumFinancialService {
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
 			List<HistoricaldataDTO> IncomeStatment = data.getData();
+			for (HistoricaldataDTO financialIncomeStatmentDTO : IncomeStatment) {
+				financialIncomeStatmentDTO.setTicker("EOG");
+				financialIncomeStatmentDTO.setItem("volume");				
+				}
 			delegate.saveDailyScriptClosedPriceData(IncomeStatment);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
@@ -818,13 +829,12 @@ public class IvaniumFinancialService {
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				List<HistoricaldataDTO> IncomeStatments = data.getData();
+				for (HistoricaldataDTO financialIncomeStatmentDTO : IncomeStatments) {
+					financialIncomeStatmentDTO.setTicker("EOG");
+					financialIncomeStatmentDTO.setItem("volume");				
+					}
 				delegate.saveDailyScriptClosedPriceData(IncomeStatments);
-
 			}
-
-			// System.out.println(data);
-
-			// delegate.saveFinancialIncomeData(factIngredientDTOs);
 			return "save done";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -832,11 +842,12 @@ public class IvaniumFinancialService {
 		}
 		return null;
 
-	}
+	}*/
 
+	
+	
 	// daily script for beta
-
-	@RequestMapping(value = "/fact/dailyscript/beta", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	/*@RequestMapping(value = "/fact/dailyscript/beta", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String getdailyscriptBeta() {
 		try {
 
@@ -856,6 +867,10 @@ public class IvaniumFinancialService {
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
 			List<HistoricaldataDTO> IncomeStatment = data.getData();
+			for (HistoricaldataDTO financialIncomeStatmentDTO : IncomeStatment) {
+				financialIncomeStatmentDTO.setTicker("EOG");
+				financialIncomeStatmentDTO.setItem("beta");				
+				}
 			delegate.saveDailyScriptClosedPriceData(IncomeStatment);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
@@ -867,6 +882,10 @@ public class IvaniumFinancialService {
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				List<HistoricaldataDTO> IncomeStatments = data.getData();
+				for (HistoricaldataDTO financialIncomeStatmentDTO : IncomeStatments) {
+					financialIncomeStatmentDTO.setTicker("EOG");
+					financialIncomeStatmentDTO.setItem("beta");				
+					}
 				delegate.saveDailyScriptClosedPriceData(IncomeStatments);
 
 			}
@@ -881,7 +900,7 @@ public class IvaniumFinancialService {
 		}
 		return null;
 
-	}
+	}*/
 
 	@RequestMapping(value = "/fact/dailyscript/news", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String getdailyscriptNews() {
@@ -1025,8 +1044,10 @@ public class IvaniumFinancialService {
 
 	}
 
+	
+	
 	// bi weekly script short interest
-	@RequestMapping(value = "/fact/biweeklyscript/quaterly/script/companies", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	/*@RequestMapping(value = "/fact/biweeklyscript/quaterly/script/companies", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String getQuaterlyScript() {
 		try {
 
@@ -1072,7 +1093,7 @@ public class IvaniumFinancialService {
 		}
 		return null;
 
-	}
+	}*/
 	
 	
 	

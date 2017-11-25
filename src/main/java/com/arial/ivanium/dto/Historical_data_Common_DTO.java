@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Historical_data")
+@Table(name="com_historical_data")
 public class Historical_data_Common_DTO {
 	@Id
 	@Column(name="id")

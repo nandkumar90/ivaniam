@@ -8,21 +8,32 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="IntiutionalOwnership")
+@Table(name="com_institutional_owner_data")
 public class IntiutionalOwnershipDTO {
 	@Id
 	@Column(name="id")	
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private String id;
 	
-	@Column(name="owner_cik")	
-	private String owner_cik;
 	
-	@Column(name="owner_name")
-	private String owner_name;
+	@Column(name="ticker")
+	private String ticker;
+	
 	
 	@Column(name="period_ended")
     private String period_ended;
+	
+	@Column(name="Institutional_Owner_id")
+	private String Institutional_Owner_id;
+	
+	/*@Column(name="owner_cik")	
+	private String owner_cik;
+	
+	@Column(name="owner_name")
+	private String owner_name;*/
+	
+	
+
 	
 	@Column(name="value")
     private String value;
@@ -48,18 +59,26 @@ public class IntiutionalOwnershipDTO {
 	@Column(name="amount_pct_chg")
 	private String  amount_pct_chg;
 	
+	public String getTicker() {
+	return ticker;
+}
+public void setTicker(String ticker) {
+	this.ticker = ticker;
+}
+	
+	
 	public String getOwner_cik() {
-		return owner_cik;
+		return Institutional_Owner_id;
 	}
 	public void setOwner_cik(String owner_cik) {
-		this.owner_cik = owner_cik;
+		this.Institutional_Owner_id = owner_cik;
 	}
-	public String getOwner_name() {
+	/*public String getOwner_name() {
 		return owner_name;
 	}
 	public void setOwner_name(String owner_name) {
 		this.owner_name = owner_name;
-	}
+	}*/
 	public String getPeriod_ended() {
 		return period_ended;
 	}

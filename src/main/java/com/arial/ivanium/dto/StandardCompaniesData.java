@@ -4,7 +4,7 @@ import java.util.List;
 
 public class StandardCompaniesData {
 
-private List<CompaniesDTO> data = null;
+private List<Common_CompDTO> data = null;
 
 private Integer result_count;
 
@@ -16,11 +16,11 @@ private Integer total_pages;
 
 private Integer api_call_credits;
 
-public List<CompaniesDTO> getData() {
+public List<Common_CompDTO> getData() {
 	return data;
 }
 
-public void setData(List<CompaniesDTO> data) {
+public void setData(List<Common_CompDTO> data) {
 	this.data = data;
 }
 

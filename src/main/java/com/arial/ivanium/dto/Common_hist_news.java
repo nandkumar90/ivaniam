@@ -1,7 +1,5 @@
 package com.arial.ivanium.dto;
 
-import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,45 +10,33 @@ import javax.persistence.Table;
 @Entity
 @Table(name="com_historical_data_news")
 
-
-public class NewsDTO {
+public class Common_hist_news {
 	
 	@Id
-	@Column(name=" id")
+	@Column(name="id")
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private String id;
 	
 	@Column(name="ticker")
 	private String ticker;
 	
-	//@Column(name="figi_ticker")
-	//private String figi_ticker;
+	/*@Column(name="figi_ticker")
+	private String figi_ticker;
 	
-	//@Column(name="figi")
-	//private String figi;
+	@Column(name="figi")
+	private String figi;*/
 	
 	@Column(name="title")
 	private String title;
 	
-	@Column(name="Date")
-	private Date publication_date;
+	@Column(name="publication_date")
+	private String publication_date;
 	
 	@Column(name="summary")
 	private String summary;
 	
 	@Column(name="url")
 	private String url;
-	
-	
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-	
-	
 	
 	public String getTicker() {
 		return ticker;
@@ -76,10 +62,10 @@ public class NewsDTO {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public Date getPublication_date() {
+	public String getPublication_date() {
 		return publication_date;
 	}
-	public void setPublication_date(Date publication_date) {
+	public void setPublication_date(String publication_date) {
 		this.publication_date = publication_date;
 	}
 	public String getSummary() {

@@ -14,6 +14,8 @@ public class FinancialIncomeStatmentDTO {
 	@Id
 	@Column(name="TAG")
 	private String Tag;
+	
+	
 
 	public String getValue() {
 		return Value;
@@ -31,6 +33,8 @@ public class FinancialIncomeStatmentDTO {
 	public void setTag(String tag) {
 		Tag = tag;
 	}
+	
+	
 	
 	
 	

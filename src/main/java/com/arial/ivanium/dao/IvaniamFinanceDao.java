@@ -5,9 +5,12 @@ import java.util.List;
 import com.arial.ivanium.dto.BalanceSheetDTO;
 import com.arial.ivanium.dto.CalculationsDTO;
 import com.arial.ivanium.dto.CashFlowStatementDTO;
+import com.arial.ivanium.dto.Common_CompDTO;
+import com.arial.ivanium.dto.Common_financial_data_DTO;
 import com.arial.ivanium.dto.CompaniesDTO;
 import com.arial.ivanium.dto.FactIngredientDTO;
 import com.arial.ivanium.dto.FinancialIncomeStatmentDTO;
+import com.arial.ivanium.dto.Historical_data_Common_DTO;
 import com.arial.ivanium.dto.HistoricaldataDTO;
 import com.arial.ivanium.dto.IntiutionalOwnershipDTO;
 import com.arial.ivanium.dto.NewsDTO;
@@ -20,7 +23,7 @@ public interface IvaniamFinanceDao {
 
 	public void saveFactHistory(List<HistoricaldataDTO> incomeStatments) throws Exception;
 
-	public void saveFactCompnaies(List<CompaniesDTO> incomeStatments) throws Exception;
+	public void saveFactCompnaies(List<Common_CompDTO> incomeStatments) throws Exception;
 
 	public void saveFactIntiutionalOwnership(List<IntiutionalOwnershipDTO> incomeStatments) throws Exception;
 
@@ -31,4 +34,8 @@ public interface IvaniamFinanceDao {
 	public void saveBalanceSheet(BalanceSheetDTO balanceSheetDTO) throws Exception;
 
 	public void saveCalculationSheet(CalculationsDTO financialIncomedto)throws Exception;
+
+	public void saveFactHistorycom(List<Historical_data_Common_DTO> incomeStatmentcom) throws Exception;
+
+	void saveFinancialCommonData(Common_financial_data_DTO financialcom) throws Exception;
 }

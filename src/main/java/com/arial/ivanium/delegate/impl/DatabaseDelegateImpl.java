@@ -11,9 +11,12 @@ import com.arial.ivanium.delegate.DatabaseDelegate;
 import com.arial.ivanium.dto.BalanceSheetDTO;
 import com.arial.ivanium.dto.CalculationsDTO;
 import com.arial.ivanium.dto.CashFlowStatementDTO;
+import com.arial.ivanium.dto.Common_CompDTO;
+import com.arial.ivanium.dto.Common_financial_data_DTO;
 import com.arial.ivanium.dto.CompaniesDTO;
 import com.arial.ivanium.dto.FactIngredientDTO;
 import com.arial.ivanium.dto.FinancialIncomeStatmentDTO;
+import com.arial.ivanium.dto.Historical_data_Common_DTO;
 import com.arial.ivanium.dto.HistoricaldataDTO;
 import com.arial.ivanium.dto.IntiutionalOwnershipDTO;
 import com.arial.ivanium.dto.NewsDTO;
@@ -69,7 +72,24 @@ public class DatabaseDelegateImpl implements DatabaseDelegate {
 	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
-	public void saveQuaterlyComapniesData(List<CompaniesDTO> incomeStatments) throws Exception {
+	public void saveFactHistorycom(List<Historical_data_Common_DTO> common_DTO) throws Exception {
+		// TODO Auto-generated method stub
+		ivaniamFinanceDao.saveFactHistorycom(common_DTO);	
+	}
+	
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
+	public void saveFinancialCommonData(Common_financial_data_DTO common_finance_DTO)throws Exception {
+		ivaniamFinanceDao.saveFinancialCommonData(common_finance_DTO);
+		
+	}
+
+	
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
+	public void saveQuaterlyComapniesData(List<Common_CompDTO> incomeStatments) throws Exception {
 		 ivaniamFinanceDao.saveFactCompnaies(incomeStatments);		
 
 	}
@@ -96,7 +116,13 @@ public class DatabaseDelegateImpl implements DatabaseDelegate {
 	public void setIvaniamFinanceDao(IvaniamFinanceDao ivaniamFinanceDao) {
 		this.ivaniamFinanceDao = ivaniamFinanceDao;
 	}
+	
+	
+	
+	
 
+
+	
 	
 
 	

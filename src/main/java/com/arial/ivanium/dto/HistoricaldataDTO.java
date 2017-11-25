@@ -8,18 +8,36 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Historicaldata")
+@Table(name="com_short_interest_data")
 public class HistoricaldataDTO {
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private String id;
 	
+	@Column(name="ticker")
+	private String ticker;
+	
 	@Column(name="date")
 	private String date;
 
-	@Column(name="value")
+	@Column(name="Short_interest")
       private String value;
+	
+	/*@Column(name="item")
+    private String item;*/
+	
+
+	
+	
+	public String getTicker() {
+		return ticker;
+	}
+
+	public void setTicker(String ticker) {
+		this.ticker = ticker;
+	}
+
 
 	public String getDate() {
 		return date;
@@ -36,7 +54,18 @@ public class HistoricaldataDTO {
 	public void setValue(String value) {
 		this.value = value;
 	}
-      
+	
+	
+	/*public String getItem() {
+		return ticker;
+	}
+
+	public void setItem(String item) {
+		this.item = item;
+	}*/
+	
+	
+	
       
 
 }

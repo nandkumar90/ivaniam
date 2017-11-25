@@ -12,9 +12,12 @@ import com.arial.ivanium.dao.IvaniamFinanceDao;
 import com.arial.ivanium.dto.BalanceSheetDTO;
 import com.arial.ivanium.dto.CalculationsDTO;
 import com.arial.ivanium.dto.CashFlowStatementDTO;
+import com.arial.ivanium.dto.Common_CompDTO;
+import com.arial.ivanium.dto.Common_financial_data_DTO;
 import com.arial.ivanium.dto.CompaniesDTO;
 import com.arial.ivanium.dto.FactIngredientDTO;
 import com.arial.ivanium.dto.FinancialIncomeStatmentDTO;
+import com.arial.ivanium.dto.Historical_data_Common_DTO;
 import com.arial.ivanium.dto.HistoricaldataDTO;
 import com.arial.ivanium.dto.IntiutionalOwnershipDTO;
 import com.arial.ivanium.dto.NewsDTO;
@@ -131,13 +134,56 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 		}
 		
 	}
-
+	
+	
 	@Override
-	public void saveFactCompnaies(List<CompaniesDTO> incomeStatments) throws Exception {
+	public void saveFactHistorycom(List<Historical_data_Common_DTO> incomeStatmentcom) throws Exception {
 		try {
 			System.out.println("Saving all csv data into table financial_income_statement ");
 			session = getSession();
-			for (CompaniesDTO companiesDTO : incomeStatments) {
+			for (Historical_data_Common_DTO historyDTO : incomeStatmentcom) {
+				
+				session.save(historyDTO);
+			}
+
+			
+		} catch (Exception ex) {
+			throw new Exception(ex.getMessage().toString());
+
+		}
+		finally {
+			System.out.println("in finally");
+		}
+		
+	}
+	
+	
+	@Override
+	public void saveFinancialCommonData(Common_financial_data_DTO financialcom) throws Exception {
+		try {
+			System.out.println("Saving all csv data into table financial_income_statement ");
+			session = getSession();
+			session.save(financialcom);
+		
+			
+		} catch (Exception ex) {
+			throw new Exception(ex.getMessage().toString());
+
+		}
+		finally {
+			System.out.println("in finally");
+		}
+		
+	}
+		
+
+
+	@Override
+	public void saveFactCompnaies(List<Common_CompDTO> incomeStatments) throws Exception {
+		try {
+			System.out.println("Saving all csv data into table financial_income_statement ");
+			session = getSession();
+			for (Common_CompDTO companiesDTO : incomeStatments) {
 				
 				session.save(companiesDTO);
 			}

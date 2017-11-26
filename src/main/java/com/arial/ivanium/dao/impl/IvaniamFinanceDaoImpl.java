@@ -267,8 +267,9 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 			
 			Query query = getSession().createQuery("from com_financial_statement where ticker= :ticker and fiscal_Year= :fiscal_Year");
 			
-			query.setString("ticker", ticker);
-			//query.setString("fiscal_Year", fiscal_Year);
+			query.setParameter("ticker", ticker);
+		    query.setParameter("fiscal_Year", fiscal_Year);
+
 			return (List<Common_financial_data_DTO>) query.list();
 		} catch (Exception ex) {
 			

@@ -116,6 +116,19 @@ public class DatabaseDelegateImpl implements DatabaseDelegate {
 	public void setIvaniamFinanceDao(IvaniamFinanceDao ivaniamFinanceDao) {
 		this.ivaniamFinanceDao = ivaniamFinanceDao;
 	}
+
+	@Override
+	public List<Historical_data_Common_DTO> getFinancialCommonData(String ticker) throws Exception {
+		
+		return ivaniamFinanceDao.getFinancialCommonData(ticker);
+	}
+
+	@Override
+	public List<Common_financial_data_DTO> getFinancialCommonData(String ticker, String quarter, int year)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return ivaniamFinanceDao.getFinancialCommonData(ticker, quarter, year);
+	}
 	
 	
 	

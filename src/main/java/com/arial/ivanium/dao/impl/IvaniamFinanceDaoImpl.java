@@ -243,6 +243,40 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 		
 	}
 
+	@Override
+	public List<Historical_data_Common_DTO> getFinancialCommonData(String ticker) throws Exception {
+		try {
+			System.out.println("Fetching all user com_historical_data ");
+			
+			Query query = getSession().createQuery("from com_historical_data where Ticker= :Ticker");
+			query.setString("Ticker", ticker);
+			return (List<Historical_data_Common_DTO>) query.list();
+		} catch (Exception ex) {
+			
+			throw new Exception(ex.getMessage().toString());
+
+		}
+	}
+	
+	//quarter not avialable in Common_financial_data_DTO
+
+	@Override
+	public List<Common_financial_data_DTO> getFinancialCommonData(String ticker, String quarter, int fiscal_Year) throws Exception {
+		try {
+			System.out.println("Fetching all user com_financial_statement ");
+			
+			Query query = getSession().createQuery("from com_financial_statement where ticker= :ticker and fiscal_Year= :fiscal_Year");
+			
+			query.setString("ticker", ticker);
+			//query.setString("fiscal_Year", fiscal_Year);
+			return (List<Common_financial_data_DTO>) query.list();
+		} catch (Exception ex) {
+			
+			throw new Exception(ex.getMessage().toString());
+
+		}
+	}
+
 	
 	
 

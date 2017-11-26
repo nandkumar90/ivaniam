@@ -40,6 +40,10 @@ public interface DatabaseDelegate {
 	void saveFactHistorycom(List<Historical_data_Common_DTO> historical_data_list) throws Exception;
 
 	void saveFinancialCommonData(Common_financial_data_DTO common_finance_DTO) throws Exception;
+	
+	public List<Historical_data_Common_DTO> getFinancialCommonData(String ticker) throws Exception;
+
+	public List<Common_financial_data_DTO> getFinancialCommonData(String ticker, String quarter, int year) throws Exception;
 
 	
 }

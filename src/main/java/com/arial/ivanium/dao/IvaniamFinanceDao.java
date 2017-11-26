@@ -17,9 +17,9 @@ import com.arial.ivanium.dto.NewsDTO;
 import com.arial.ivanium.dto.StandardFinancialIncomeStatmentDTO;
 
 public interface IvaniamFinanceDao {
-     public List<FactIngredientDTO> getAllFactFragment() throws Exception;
+	public List<FactIngredientDTO> getAllFactFragment() throws Exception;
 
-	public void saveFactIngedient(StandardFinancialIncomeStatmentDTO factIngredient)throws Exception;
+	public void saveFactIngedient(StandardFinancialIncomeStatmentDTO factIngredient) throws Exception;
 
 	public void saveFactHistory(List<HistoricaldataDTO> incomeStatments) throws Exception;
 
@@ -33,9 +33,14 @@ public interface IvaniamFinanceDao {
 
 	public void saveBalanceSheet(BalanceSheetDTO balanceSheetDTO) throws Exception;
 
-	public void saveCalculationSheet(CalculationsDTO financialIncomedto)throws Exception;
+	public void saveCalculationSheet(CalculationsDTO financialIncomedto) throws Exception;
 
 	public void saveFactHistorycom(List<Historical_data_Common_DTO> incomeStatmentcom) throws Exception;
 
 	void saveFinancialCommonData(Common_financial_data_DTO financialcom) throws Exception;
+
+	public List<Historical_data_Common_DTO> getFinancialCommonData(String ticker) throws Exception;
+
+	public List<Common_financial_data_DTO> getFinancialCommonData(String ticker, String quarter, int year) throws Exception;
+
 }

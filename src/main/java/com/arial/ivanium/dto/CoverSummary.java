@@ -21,7 +21,7 @@ public class CoverSummary {
 	private double Price_Target_3PNAV;
 	private double Official_Price_Target_average;
 	private double PotentialAppreciation;
-	private double Model_View;
+	private String Model_View;
 	
 	public int getId() {
 		return id;
@@ -131,11 +131,11 @@ public class CoverSummary {
 	public void setPotentialAppreciation(double potentialAppreciation) {
 		PotentialAppreciation = potentialAppreciation;
 	}
-	public double getModel_View() {
+	public String getModel_View() {
 		return Model_View;
 	}
-	public void setModel_View(double model_View) {
-		Model_View = model_View;
+	public void setModel_View(String string) {
+		Model_View = string;
 	}
 
 	

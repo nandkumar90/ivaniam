@@ -261,7 +261,7 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 	//quarter not avialable in Common_financial_data_DTO
 
 	@Override
-	public List<Common_financial_data_DTO> getFinancialCommonData(String ticker, String quarter, int fiscal_Year) throws Exception {
+	public List<Common_financial_data_DTO> getFinancialCommonData(String ticker, String fiscal_period, int fiscal_Year) throws Exception {
 		try {
 			System.out.println("Fetching all user com_financial_statement ");
 			
@@ -269,7 +269,9 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 			
 			query.setParameter("ticker", ticker);
 		    query.setParameter("fiscal_Year", fiscal_Year);
+		    query.setParameter("fiscal_period", fiscal_period);
 
+		    
 			return (List<Common_financial_data_DTO>) query.list();
 		} catch (Exception ex) {
 			

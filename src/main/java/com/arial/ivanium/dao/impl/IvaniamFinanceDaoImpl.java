@@ -258,7 +258,6 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 		}
 	}
 	
-	//quarter not avialable in Common_financial_data_DTO
 
 	@Override
 	public List<Common_financial_data_DTO> getFinancialCommonData(String ticker, String fiscal_period, int fiscal_Year) throws Exception {
@@ -270,7 +269,6 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 			query.setParameter("ticker", ticker);
 		    query.setParameter("fiscal_Year", fiscal_Year);
 		    query.setParameter("fiscal_period", fiscal_period);
-
 		    
 			return (List<Common_financial_data_DTO>) query.list();
 		} catch (Exception ex) {
@@ -280,7 +278,45 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 		}
 	}
 
+	//get latest data for a given year
+	@Override
+	public List<HistoricaldataDTO> getLatestYearFinancialCommonData(String date, String ticker) throws Exception {
+		try {
+			System.out.println("Fetching all user getLatestYearFinancialCommonData ");
+			String sqlstring= "select * from com_short_interest_data where date =(+select max(date) from com_short_interest_data where date like '%-"+date+"% and ticker="+ticker;
+			//"select * from com_historical_data where Ticker= :Ticker and date= :date"
+			//select * from tam_tmpl_rule where created_time =(
+			//select max(created_time) from tam_tmpl_rule where created_time like '%-17%');
+			Query query = getSession().createSQLQuery(sqlstring);
+			
+
+			return (List<HistoricaldataDTO>) query.list();
+		} catch (Exception ex) {
+			
+			throw new Exception(ex.getMessage().toString());
+
+		}
+	}
 	
 	
+	//get latest data for a given year
+	//TODO need to add week column in hostory table
+		@Override
+		public List<Historical_data_Common_DTO> getLatestWeekFinancialCommonData(String date, String Ticker, int week) throws Exception {
+			try {
+				System.out.println("Fetching all user getLatestWeekFinancialCommonData ");
+				String sqlstring= "select * from com_historical_data where date =(+select max(date) from com_historical_data where com_historical_data like '%-"+date+"% and Ticker="+Ticker+"and  week="+week;            ;
+
+				Query query = getSession().createSQLQuery(sqlstring);
+			
+
+				
+				return (List<Historical_data_Common_DTO>) query.list();
+			} catch (Exception ex) {
+				
+				throw new Exception(ex.getMessage().toString());
+
+			}
+		}
 
 }

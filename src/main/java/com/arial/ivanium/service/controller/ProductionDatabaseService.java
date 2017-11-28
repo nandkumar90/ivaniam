@@ -152,8 +152,8 @@ public class ProductionDatabaseService {
 				Historical_data_Common_DTO histData = histDataList.get(0);
 				double close_price = Double.parseDouble(histData.getClose_price());
 				double beta = Double.parseDouble(histData.getBeta());
-				
-				List<HistoricaldataDTO> shortDataList = null; //= delegate.getFinancialCommonData(ticker);
+				String date ="17";
+				List<HistoricaldataDTO> shortDataList = delegate.getYearlyLatestData(date, ticker); //= delegate.getFinancialCommonData(ticker);
 				
 				// TODO: Get last entry of the year
 				HistoricaldataDTO shortData = shortDataList.get(0);				
@@ -223,8 +223,9 @@ public class ProductionDatabaseService {
 		try {
 			
 			for (int year = 2008; year < 2018; year++) {
-				
-				List<Historical_data_Common_DTO> histDataList = delegate.getFinancialCommonData(ticker);
+				String date="17";
+				int week =10;
+				List<Historical_data_Common_DTO> histDataList = delegate.getWeeklyLatestData(date, ticker, week);
 				
 				List<Common_financial_data_DTO> financial_dataList = delegate.getFinancialCommonData(ticker,
 						"FY", year);

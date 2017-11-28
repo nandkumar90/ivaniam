@@ -45,5 +45,9 @@ public interface DatabaseDelegate {
 
 	public List<Common_financial_data_DTO> getFinancialCommonData(String ticker, String quarter, int year) throws Exception;
 
+	List<HistoricaldataDTO> getYearlyLatestData(String date, String ticker) throws Exception;
+
+	List<Historical_data_Common_DTO> getWeeklyLatestData(String date, String ticker, int yeweekar) throws Exception;
+
 	
 }

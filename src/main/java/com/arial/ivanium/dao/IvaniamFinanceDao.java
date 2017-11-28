@@ -43,4 +43,9 @@ public interface IvaniamFinanceDao {
 
 	public List<Common_financial_data_DTO> getFinancialCommonData(String ticker, String quarter, int year) throws Exception;
 
+	List<HistoricaldataDTO> getLatestYearFinancialCommonData(String date, String ticker) throws Exception;
+
+	List<Historical_data_Common_DTO> getLatestWeekFinancialCommonData(String date, String ticker, int week)
+			throws Exception;
+
 }

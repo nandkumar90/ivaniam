@@ -131,7 +131,19 @@ public class DatabaseDelegateImpl implements DatabaseDelegate {
 	}
 	
 	
+	@Override
+	public List<HistoricaldataDTO> getYearlyLatestData(String date, String ticker)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return ivaniamFinanceDao.getLatestYearFinancialCommonData(date, ticker);
+	}
 	
+	@Override
+	public List<Historical_data_Common_DTO> getWeeklyLatestData(String date, String ticker, int week)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return ivaniamFinanceDao.getLatestWeekFinancialCommonData(date, ticker, week);
+	}
 	
 
 

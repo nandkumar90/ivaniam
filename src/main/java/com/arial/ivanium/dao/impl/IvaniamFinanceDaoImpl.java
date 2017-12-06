@@ -318,5 +318,26 @@ public class IvaniamFinanceDaoImpl extends AbstractDao implements IvaniamFinance
 
 			}
 		}
+		
+		//get latest data for a given year
+		@Override
+		public List<String> getLatestDate(String tableName) throws Exception {
+			try {
+				//select max(date) from com_short_interest_data
+				System.out.println("Fetching latest date from a given table  ");
+				String sqlstring= "select max(date) from "+tableName;
+				//"select * from com_historical_data where Ticker= :Ticker and date= :date"
+				//select * from tam_tmpl_rule where created_time =(
+				//select max(created_time) from tam_tmpl_rule where created_time like '%-17%');
+				Query query = getSession().createSQLQuery(sqlstring);
+				
+
+				return (List<String>) query.list();
+			} catch (Exception ex) {
+				
+				throw new Exception(ex.getMessage().toString());
+
+			}
+		}
 
 }

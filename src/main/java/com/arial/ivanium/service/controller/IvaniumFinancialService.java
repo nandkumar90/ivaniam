@@ -214,7 +214,10 @@ public class IvaniumFinancialService {
 						
 					}
 					delegate.saveFinancialIncomeData(financialIncomedto);
-
+					
+					
+					
+					
 					// System.out.println(data);
 				}
 

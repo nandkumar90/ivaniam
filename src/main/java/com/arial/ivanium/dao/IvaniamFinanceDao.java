@@ -48,4 +48,6 @@ public interface IvaniamFinanceDao {
 	List<Historical_data_Common_DTO> getLatestWeekFinancialCommonData(String date, String ticker, int week)
 			throws Exception;
 
+	List<String> getLatestDate(String tableName) throws Exception;
+
 }

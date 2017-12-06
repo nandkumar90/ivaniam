@@ -146,7 +146,12 @@ public class DatabaseDelegateImpl implements DatabaseDelegate {
 	}
 	
 
-
+	@Override
+	public List<String> getLatestDate(String tableName)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return ivaniamFinanceDao.getLatestDate(tableName);
+	}
 	
 	
 

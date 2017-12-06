@@ -49,5 +49,7 @@ public interface DatabaseDelegate {
 
 	List<Historical_data_Common_DTO> getWeeklyLatestData(String date, String ticker, int yeweekar) throws Exception;
 
+	List<String> getLatestDate(String tableName) throws Exception;
+
 	
 }

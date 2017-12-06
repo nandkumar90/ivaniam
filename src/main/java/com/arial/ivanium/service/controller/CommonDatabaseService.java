@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,6 +49,7 @@ import com.arial.ivanium.dto.StandardHistoricalData;
 import com.arial.ivanium.dto.StandardIncomeStatment;
 import com.arial.ivanium.dto.StandardInstuitionalOwnershipDTO;
 import com.arial.ivanium.dto.StandardNewsDTO;
+import com.arial.ivanium.dto.Ticker;
 
 @Controller
 public class CommonDatabaseService {
@@ -64,13 +66,13 @@ public class CommonDatabaseService {
 
 	
 
-	@RequestMapping(value = "/common/daily/historydata", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getHistoryClosedPrices() {
+	@RequestMapping(value = "/common/daily/historydata/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getHistoryClosedPrices(@PathVariable("ticker") String  ticker) {
 		try {
 
 			int crrentPage = 0;
 			int totalPage = 0;
-			Historical_data_Common_DTO common_DTO=new Historical_data_Common_DTO("EOG");
+			Historical_data_Common_DTO common_DTO=new Historical_data_Common_DTO(ticker);
 			Map<String, Historical_data_Common_DTO> histomryObjecTmap=new HashMap<>();
 
 			HttpHeaders headers = new HttpHeaders();
@@ -81,73 +83,73 @@ public class CommonDatabaseService {
 
 			//for close price 
 			ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
-					"https://api.intrinio.com/historical_data?identifier=EOG&item=close_price", HttpMethod.GET, request,
+					"https://api.intrinio.com/historical_data?identifier="+ticker+"&item=close_price", HttpMethod.GET, request,
 					StandardHistoricalData.class);
 			StandardHistoricalData data = result.getBody();
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
 			List<HistoricaldataDTO> IncomeStatment = data.getData();
-			histomryObjecTmap=setValuesInMap(IncomeStatment,histomryObjecTmap, "close_price" ,"EOG");
+			histomryObjecTmap=setValuesInMap(IncomeStatment,histomryObjecTmap, "close_price" ,ticker);
 			
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
 				String urlAttr = ("page_number =" + crrentPage);
 				ResponseEntity<StandardHistoricalData> results = restTemplate.exchange(
-						"https://api.intrinio.com/historical_data?identifier=EOG&item=close_price&"+urlAttr, HttpMethod.GET,
+						"https://api.intrinio.com/historical_data?identifier="+ticker+"&item=close_price&"+urlAttr, HttpMethod.GET,
 						request, StandardHistoricalData.class);
 				StandardHistoricalData datas = results.getBody();
 				crrentPage = datas.getCurrent_page();
 				List<HistoricaldataDTO> IncomeStatments = datas.getData();
-				histomryObjecTmap=setValuesInMap(IncomeStatments,histomryObjecTmap, "close_price" ,"EOG");
+				histomryObjecTmap=setValuesInMap(IncomeStatments,histomryObjecTmap, "close_price" ,ticker);
 
 			}
 
 			
 			//for volume
 			ResponseEntity<StandardHistoricalData> resultVOlume = restTemplate.exchange(
-					"https://api.intrinio.com/historical_data?identifier=EOG&item=volume", HttpMethod.GET, request,
+					"https://api.intrinio.com/historical_data?identifier="+ticker+"&item=volume", HttpMethod.GET, request,
 					StandardHistoricalData.class);
 			StandardHistoricalData dataVolume = resultVOlume.getBody();
 			crrentPage = dataVolume.getCurrent_page();
 			totalPage = dataVolume.getTotal_pages();
 			List<HistoricaldataDTO> volume = dataVolume.getData();
-			histomryObjecTmap=setValuesInMap(volume,histomryObjecTmap, "volume" ,"EOG");
+			histomryObjecTmap=setValuesInMap(volume,histomryObjecTmap, "volume" ,ticker);
 
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
 				String urlAttr = ("page_number=" + crrentPage);
 				ResponseEntity<StandardHistoricalData> resultss = restTemplate.exchange(
-						"https://api.intrinio.com/historical_data?identifier=EOG&item=volume"+urlAttr, HttpMethod.GET, request,
+						"https://api.intrinio.com/historical_data?identifier="+ticker+"&item=volume"+urlAttr, HttpMethod.GET, request,
 						StandardHistoricalData.class);
 				StandardHistoricalData dataVolumes = resultVOlume.getBody();
 
 				crrentPage = dataVolumes.getCurrent_page();
 				List<HistoricaldataDTO> IncomeStatments = dataVolumes.getData();
-				histomryObjecTmap=setValuesInMap(IncomeStatments,histomryObjecTmap, "volume" ,"EOG");
+				histomryObjecTmap=setValuesInMap(IncomeStatments,histomryObjecTmap, "volume" ,ticker);
 
 			}
 			
 			//for beta 
 			ResponseEntity<StandardHistoricalData> resultBeta = restTemplate.exchange(
-					"https://api.intrinio.com/historical_data?identifier=EOG&item=beta", HttpMethod.GET, request,
+					"https://api.intrinio.com/historical_data?identifier="+ticker+"&item=beta", HttpMethod.GET, request,
 					StandardHistoricalData.class);
 			StandardHistoricalData datas = resultBeta.getBody();
 			crrentPage = datas.getCurrent_page();
 			totalPage = datas.getTotal_pages();
 			List<HistoricaldataDTO> beta = datas.getData();
-			histomryObjecTmap=setValuesInMap(beta,histomryObjecTmap, "beta" ,"EOG");
+			histomryObjecTmap=setValuesInMap(beta,histomryObjecTmap, "beta" ,ticker);
 
 			if ((crrentPage != totalPage) && (totalPage > 1)) {
 				crrentPage += 1;
 				String urlAttr = ("page_number=" + crrentPage);
 				ResponseEntity<StandardHistoricalData> results = restTemplate.exchange(
-						"https://api.intrinio.com/historical_data?identifier=EOG&item=beta"+urlAttr, HttpMethod.GET, request,
+						"https://api.intrinio.com/historical_data?identifier="+ticker+"&item=beta"+urlAttr, HttpMethod.GET, request,
 						StandardHistoricalData.class);
 				StandardHistoricalData dataClosedPrice = results.getBody();
 				crrentPage = dataClosedPrice.getCurrent_page();
 				List<HistoricaldataDTO> IncomeStatments = dataClosedPrice.getData();
-				histomryObjecTmap=setValuesInMap(IncomeStatments,histomryObjecTmap, "beta" ,"EOG");
+				histomryObjecTmap=setValuesInMap(IncomeStatments,histomryObjecTmap, "beta" ,ticker);
 				
 				ArrayList<Historical_data_Common_DTO> historical_data_list = new ArrayList<Historical_data_Common_DTO>();
 				
@@ -275,8 +277,8 @@ public class CommonDatabaseService {
 	
 	///for financial
 	
-	@RequestMapping(value = "/common/financial", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getfinancialData() {
+	@RequestMapping(value = "/common/financial/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getfinancialData(@PathVariable("ticker") String  ticker) {
 		try {
 				String[] year = { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017" };
 				String[] period = { "Q1", "Q2", "Q3", "Q4", "FY" };
@@ -305,11 +307,11 @@ public class CommonDatabaseService {
 
 			//for close price 
 					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
-							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
+							"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=income_statement&fiscal_year="
 									+ fiscalYear + "&" + fiscalQuarter,
 							HttpMethod.GET, request, StandardIncomeStatment.class);
 					
-					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
+					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=income_statement&fiscal_year="
 							+ fiscalYear + "&" + fiscalQuarter;
 					System.out.println(tesrtUrl);
 					StandardIncomeStatment data = result.getBody();
@@ -319,7 +321,7 @@ public class CommonDatabaseService {
 			crrentPage = data.getCurrent_page();
 			totalPage = data.getTotal_pages();
 			//common_finance_DTO.setStatement("StandardIncomeStatment");
-			common_finance_DTO.setTicker("EOG");
+			common_finance_DTO.setTicker(ticker);
 			List<FinancialIncomeStatmentDTO> IncomeStatment = data.getData();
 			
 			for (FinancialIncomeStatmentDTO financialIncomeStatmentDTO : IncomeStatment) {
@@ -366,10 +368,10 @@ public class CommonDatabaseService {
 		
 			
 			ResponseEntity<StandardIncomeStatment> result1 = restTemplate.exchange(
-					"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=calculations&fiscal_year="
+					"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=calculations&fiscal_year="
 							+ fiscalYear + "&" + fiscalQuarter,
 					HttpMethod.GET, request, StandardIncomeStatment.class);
-			String tesrtUrl1 = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=calculations&fiscal_year="
+			String tesrtUrl1 = "https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=calculations&fiscal_year="
 					+ fiscalYear + "&" + fiscalQuarter;
 			
 			
@@ -506,10 +508,10 @@ public class CommonDatabaseService {
 		
 			
 					ResponseEntity<StandardIncomeStatment> result2 = restTemplate.exchange(
-							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=cash_flow_statement&fiscal_year="
+							"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=cash_flow_statement&fiscal_year="
 									+ fiscalYear + "&" + fiscalQuarter,
 							HttpMethod.GET, request, StandardIncomeStatment.class);
-					String tesrtUrl2 = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=cash_flow_statement&fiscal_year="
+					String tesrtUrl2 = "https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=cash_flow_statement&fiscal_year="
 							+ fiscalYear + "&" + fiscalQuarter;
 					System.out.println(tesrtUrl2);
 					StandardIncomeStatment data2 = result2.getBody();
@@ -566,11 +568,11 @@ public class CommonDatabaseService {
 					
 					
 					ResponseEntity<StandardIncomeStatment> result3 = restTemplate.exchange(
-							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
+							"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=balance_sheet&fiscal_year="
 									+ fiscalYear + "&" + fiscalQuarter,
 							HttpMethod.GET, request, StandardIncomeStatment.class);
 
-					String tesrtUrl3 = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
+					String tesrtUrl3 = "https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=balance_sheet&fiscal_year="
 							+ fiscalYear + "&" + fiscalQuarter;
 					System.out.println(tesrtUrl3);
 					StandardIncomeStatment data3 = result3.getBody();
@@ -649,8 +651,8 @@ public class CommonDatabaseService {
 	
 	
 // Common daily Script news	
-	@RequestMapping(value = "/common/dailyscript/news", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getdailyscriptNews() {
+	@RequestMapping(value = "/common/dailyscript/news/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getdailyscriptNews(@PathVariable("ticker") String  ticker) {
 		try {
 
 			int crrentPage = 0;
@@ -663,7 +665,7 @@ public class CommonDatabaseService {
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<StandardNewsDTO> result = restTemplate.exchange(
-					"https://api.intrinio.com/news?identifier=EOG", HttpMethod.GET, request,
+					"https://api.intrinio.com/news?identifier="+ticker, HttpMethod.GET, request,
 					StandardNewsDTO.class);
 			StandardNewsDTO data = result.getBody();
 			crrentPage = data.getCurrent_page();
@@ -680,7 +682,7 @@ public class CommonDatabaseService {
 				crrentPage += 1;
 				String urlAttr = ("page_index=" + crrentPage);
 				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
-						"https://api.intrinio.com/news?identifier=EOG", HttpMethod.GET, request,
+						"https://api.intrinio.com/news?identifier="+ticker, HttpMethod.GET, request,
 						HistoricaldataDTO.class);
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
@@ -704,8 +706,8 @@ public class CommonDatabaseService {
 	
 	
 	// common institutional ownership
-		@RequestMapping(value = "/common/biweeklyscript/instuitional/ownership", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-		public @ResponseBody String getBiWeeklyInstuitional() {
+		@RequestMapping(value = "/common/biweeklyscript/instuitional/ownership/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+		public @ResponseBody String getBiWeeklyInstuitional(@PathVariable("ticker") String  ticker) {
 			try {
 
 				int crrentPage = 0;
@@ -717,14 +719,14 @@ public class CommonDatabaseService {
 				HttpEntity<String> request = new HttpEntity<String>(headers);
 				RestTemplate restTemplate = new RestTemplate();
 				ResponseEntity<StandardInstuitionalOwnershipDTO> result = restTemplate.exchange(
-						"https://api.intrinio.com/securities/institutional_ownership?identifier=EOG", HttpMethod.GET,
+						"https://api.intrinio.com/securities/institutional_ownership?identifier="+ticker, HttpMethod.GET,
 						request, StandardInstuitionalOwnershipDTO.class);
 				StandardInstuitionalOwnershipDTO data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				totalPage = data.getTotal_pages();
 				List<IntiutionalOwnershipDTO> factIngredientDTOs = data.getData();
 				for (IntiutionalOwnershipDTO indata: factIngredientDTOs) {
-					indata.setTicker("EOG");
+					indata.setTicker(ticker);
 				}
 				delegate.saveWeeklyTnstuitionalOwnership(factIngredientDTOs);
 
@@ -732,14 +734,14 @@ public class CommonDatabaseService {
 					crrentPage += 1;
 					String urlAttr = ("page_index=" + crrentPage);
 					ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
-							"https://api.intrinio.com/securities/institutional_ownership?identifier=EOG", HttpMethod.GET,
+							"https://api.intrinio.com/securities/institutional_ownership?identifier="+ticker, HttpMethod.GET,
 							request, HistoricaldataDTO.class);
 					data = result.getBody();
 					crrentPage = data.getCurrent_page();
 					
 					List<IntiutionalOwnershipDTO> IncomeStatments = data.getData();
 					for (IntiutionalOwnershipDTO indata: IncomeStatments) {
-						indata.setTicker("EOG");
+						indata.setTicker(ticker);
 					}
 					delegate.saveWeeklyTnstuitionalOwnership(IncomeStatments);
 
@@ -762,8 +764,8 @@ public class CommonDatabaseService {
 		
 		
 		// bi weekly script short interest
-		@RequestMapping(value = "/common/biweeklyscript/quaterly/script/companies", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-		public @ResponseBody String getQuaterlyScript() {
+		@RequestMapping(value = "/common/biweeklyscript/quaterly/script/companies/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+		public @ResponseBody String getQuaterlyScript(@PathVariable("ticker") String  ticker) {
 			try {
 
 				int crrentPage = 0;
@@ -777,14 +779,14 @@ public class CommonDatabaseService {
 				HttpEntity<String> request = new HttpEntity<String>(headers);
 				RestTemplate restTemplate = new RestTemplate();
 				ResponseEntity<StandardCompaniesData> result = restTemplate.exchange(
-						"https://api.intrinio.com/companies/filings?identifier=EOG", HttpMethod.GET, request,
+						"https://api.intrinio.com/companies/filings?identifier="+ticker, HttpMethod.GET, request,
 						StandardCompaniesData.class);
 				StandardCompaniesData data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				totalPage = data.getTotal_pages();
 				List<Common_CompDTO> companiesData = data.getData();
 				for (Common_CompDTO cdata: companiesData) {
-					cdata.setTicker("EOG");
+					cdata.setTicker(ticker);
 				}
 				delegate.saveQuaterlyComapniesData(companiesData);
 
@@ -792,13 +794,13 @@ public class CommonDatabaseService {
 					crrentPage += 1;
 					String urlAttr = ("page_index=" + crrentPage);
 					ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
-							"https://api.intrinio.com/companies/filings?identifier=EOG", HttpMethod.GET, request,
+							"https://api.intrinio.com/companies/filings?identifier="+ticker, HttpMethod.GET, request,
 							HistoricaldataDTO.class);
 					data = result.getBody();
 					crrentPage = data.getCurrent_page();
 					List<Common_CompDTO> compnaie = data.getData();
 					for (Common_CompDTO cdata: compnaie) {
-						cdata.setTicker("EOG");
+						cdata.setTicker(ticker);
 					}
 					delegate.saveQuaterlyComapniesData(compnaie);
 
@@ -822,8 +824,8 @@ public class CommonDatabaseService {
 		
 		
 		// bi weekly script short interest
-		@RequestMapping(value = "/common/biweeklyscript/shortinterest", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-		public @ResponseBody String getBiWeeklyShortInterest() {
+		@RequestMapping(value = "/common/biweeklyscript/shortinterest/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+		public @ResponseBody String getBiWeeklyShortInterest(@PathVariable("ticker") String  ticker) {
 			try {
 
 				int crrentPage = 0;
@@ -836,14 +838,14 @@ public class CommonDatabaseService {
 				HttpEntity<String> request = new HttpEntity<String>(headers);
 				RestTemplate restTemplate = new RestTemplate();
 				ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
-						"https://api.intrinio.com/historical_data?identifier=EOG&item=short_interest", HttpMethod.GET,
+						"https://api.intrinio.com/historical_data?identifier="+ticker+"&item=short_interest", HttpMethod.GET,
 						request, StandardHistoricalData.class);
 				StandardHistoricalData data = result.getBody();
 				crrentPage = data.getCurrent_page();
 				totalPage = data.getTotal_pages();
 				List<HistoricaldataDTO> factIngredientDTOs = data.getData();
 				for (HistoricaldataDTO shortdata: factIngredientDTOs) {
-					shortdata.setTicker("EOG");
+					shortdata.setTicker(ticker);
 				}
 				delegate.saveDailyScriptClosedPriceData(factIngredientDTOs);
 
@@ -851,13 +853,13 @@ public class CommonDatabaseService {
 					crrentPage += 1;
 					String urlAttr = ("page_index=" + crrentPage);
 					ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
-							"https://api.intrinio.com/historical_data?identifier=EOG&item=short_interest", HttpMethod.GET,
+							"https://api.intrinio.com/historical_data?identifier="+ticker+"&item=short_interest", HttpMethod.GET,
 							request, HistoricaldataDTO.class);
 					data = result.getBody();
 					crrentPage = data.getCurrent_page();
 					List<HistoricaldataDTO> IncomeStatments = data.getData();
 					for (HistoricaldataDTO shortdata: IncomeStatments) {
-						shortdata.setTicker("EOG");
+						shortdata.setTicker(tick);
 					}
 					delegate.saveDailyScriptClosedPriceData(IncomeStatments);
 

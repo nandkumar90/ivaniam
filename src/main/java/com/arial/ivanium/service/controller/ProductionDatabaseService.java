@@ -28,6 +28,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -98,9 +99,8 @@ public class ProductionDatabaseService {
 	}
 
 
-	@RequestMapping(value = "/prod/coverSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getCoverSummary() {
-		String ticker = "EOG";
+	@RequestMapping(value = "/prod/coverSummary/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getCoverSummary(@PathVariable("ticker") String  ticker) {
 		try {
 			List<Historical_data_Common_DTO> histDataList = delegate.getFinancialCommonData(ticker);
 			Historical_data_Common_DTO histData = histDataList.get(0);
@@ -140,9 +140,8 @@ public class ProductionDatabaseService {
 
 	}
 
-	@RequestMapping(value = "/prod/coverDetail", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getCoverDetail() {
-		String ticker = "EOG";
+	@RequestMapping(value = "/prod/coverDetail/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getCoverDetail(@PathVariable("ticker") String  ticker) {
 		try {
 			
 			for (int year = 2008; year < 2018; year++) {
@@ -217,9 +216,8 @@ public class ProductionDatabaseService {
 	
 	
 	
-	@RequestMapping(value = "/prod/XesUsEquity", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getXesUsEquity() {
-		String ticker = "EOG";
+	@RequestMapping(value = "/prod/XesUsEquity/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getXesUsEquity(@PathVariable("ticker") String  ticker) {
 		try {
 			
 			for (int year = 2008; year < 2018; year++) {

@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -67,8 +68,8 @@ public class IvaniumFinancialService {
 		return null;
 	}
 
-	@RequestMapping(value = "/fact/getAllExternalData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getAllExternalData() {
+	@RequestMapping(value = "/fact/getAllExternalData/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getAllExternalData(@PathVariable("ticker") String  ticker) {
 		try {
 			List<FinancialIncomeStatmentDTO> factIngredientDTOs = new ArrayList<>();
 			Map<String, Integer> pagedetail = new HashMap<>();
@@ -82,7 +83,7 @@ public class IvaniumFinancialService {
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<String> result = restTemplate.exchange(
-					"https://api.intrinio.com/financials/standardized.csv?fiscal_period=FY&fiscal_year=2016&statement=income_statement&ticker=EOG",
+					"https://api.intrinio.com/financials/standardized.csv?fiscal_period=FY&fiscal_year=2016&statement=income_statement&ticker="+ticker,
 					HttpMethod.GET, request, String.class);
 			BufferedReader br = null;
 			String data = result.getBody();
@@ -125,8 +126,8 @@ public class IvaniumFinancialService {
 	}
 
 	// this consist income statment and calculation section of requirment
-	@RequestMapping(value = "/fact/getStandardIncomeStatmentData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getAllIncomeStatmentData() {
+	@RequestMapping(value = "/fact/getStandardIncomeStatmentData/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getAllIncomeStatmentData(@PathVariable("ticker") String  ticker) {
 		try {
 			String[] year = { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017" };
 			String[] period = { "Q1", "Q2", "Q3", "Q4", "FY" };
@@ -148,7 +149,7 @@ public class IvaniumFinancialService {
 			RestTemplate restTemplate = new RestTemplate();
 			StandardFinancialIncomeStatmentDTO financialIncomedto=new StandardFinancialIncomeStatmentDTO();
 			financialIncomedto.setStatement("StandardIncomeStatment");
-			financialIncomedto.setTicker("EOG");
+			financialIncomedto.setTicker(ticker);
 			for (int z = 0; z <= 7; z++) {
 				String fiscalYear = year[z];
 				financialIncomedto.setFiscal_year(fiscalYear);
@@ -158,11 +159,11 @@ public class IvaniumFinancialService {
 
 					String fiscalQuarter = "fiscal_period=" + period[i];
 					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
-							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
+							"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=income_statement&fiscal_year="
 									+ fiscalYear + "&" + fiscalQuarter,
 							HttpMethod.GET, request, StandardIncomeStatment.class);
 
-					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=income_statement&fiscal_year="
+					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=income_statement&fiscal_year="
 							+ fiscalYear + "&" + fiscalQuarter;
 					System.out.println(tesrtUrl);
 					StandardIncomeStatment data = result.getBody();
@@ -231,8 +232,8 @@ public class IvaniumFinancialService {
 	
 	//
 	// this consist income statment and calculation section of requirment
-		@RequestMapping(value = "/fact/getCalculation", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-		public @ResponseBody String getCalculationData() {
+		@RequestMapping(value = "/fact/getCalculation/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+		public @ResponseBody String getCalculationData(@PathVariable("ticker") String  ticker) {
 			try {
 				String[] year = { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017" };
 				String[] period = { "Q1", "Q2", "Q3", "Q4", "FY" };
@@ -265,7 +266,7 @@ public class IvaniumFinancialService {
 				
 				//StandardFinancialIncomeStatmentDTO financialIncomedto=new StandardFinancialIncomeStatmentDTO();
 				caculationto.setStatement("StandardIncomeStatment");
-				caculationto.setTicker("EOG");
+				caculationto.setTicker(ticker);
 									
 				
 			
@@ -282,10 +283,10 @@ public class IvaniumFinancialService {
 
 						String fiscalQuarter = "fiscal_period=" + period[i];
 						ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
-								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=calculations&fiscal_year="
+								"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=calculations&fiscal_year="
 										+ fiscalYear + "&" + fiscalQuarter,
 								HttpMethod.GET, request, StandardIncomeStatment.class);
-						String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=calculations&fiscal_year="
+						String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=calculations&fiscal_year="
 								+ fiscalYear + "&" + fiscalQuarter;
 						
 						
@@ -426,7 +427,7 @@ public class IvaniumFinancialService {
 							crrentPage += 1;
 							String urlAttr = ("page_index=" + crrentPage);
 							ResponseEntity<StandardIncomeStatment> results = restTemplate.exchange(
-									"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=cash_flow_statement&fiscal_year="
+									"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=cash_flow_statement&fiscal_year="
 											+ fiscalYear + "&" + fiscalQuarter + "&page_index=" + crrentPage,
 									HttpMethod.GET, request, StandardIncomeStatment.class);
 							data = result.getBody();
@@ -461,8 +462,8 @@ public class IvaniumFinancialService {
 
 	// daily script
 
-	@RequestMapping(value = "/fact/cashflow", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getHistoricaldataFacts() {
+	@RequestMapping(value = "/fact/cashflow/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getHistoricaldataFacts(@PathVariable("ticker") String  ticker) {
 		try {
 			String[] year = { "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017" };
 			String[] period = { "Q1", "Q2", "Q3", "Q4", "FY" };
@@ -495,7 +496,7 @@ public class IvaniumFinancialService {
 			
 			//StandardFinancialIncomeStatmentDTO financialIncomedto=new StandardFinancialIncomeStatmentDTO();
 			cashflow.setStatement("StandardIncomeStatment");
-			cashflow.setTicker("EOG");
+			cashflow.setTicker(ticker);
 								
 			
 		
@@ -512,10 +513,10 @@ public class IvaniumFinancialService {
 
 					String fiscalQuarter = "fiscal_period=" + period[i];
 					ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
-							"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=cash_flow_statement&fiscal_year="
+							"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=cash_flow_statement&fiscal_year="
 									+ fiscalYear + "&" + fiscalQuarter,
 							HttpMethod.GET, request, StandardIncomeStatment.class);
-					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=cash_flow_statement&fiscal_year="
+					String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=cash_flow_statement&fiscal_year="
 							+ fiscalYear + "&" + fiscalQuarter;
 					System.out.println(tesrtUrl);
 					StandardIncomeStatment data = result.getBody();
@@ -577,7 +578,7 @@ public class IvaniumFinancialService {
 						crrentPage += 1;
 						String urlAttr = ("page_index=" + crrentPage);
 						ResponseEntity<StandardIncomeStatment> results = restTemplate.exchange(
-								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=cash_flow_statement&fiscal_year="
+								"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=cash_flow_statement&fiscal_year="
 										+ fiscalYear + "&" + fiscalQuarter + "&page_index=" + crrentPage,
 								HttpMethod.GET, request, StandardIncomeStatment.class);
 						data = result.getBody();
@@ -604,8 +605,8 @@ public class IvaniumFinancialService {
 	}
 
 	// bi-weekly ownership
-	@RequestMapping(value = "/fact/balancesheet", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getIntiutionalOwnershipFacts() {
+	@RequestMapping(value = "/fact/balancesheet/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getIntiutionalOwnershipFacts(@PathVariable("ticker") String  ticker) {
 		
 		
 		try {
@@ -635,7 +636,7 @@ public class IvaniumFinancialService {
 		
 		//StandardFinancialIncomeStatmentDTO financialIncomedto=new StandardFinancialIncomeStatmentDTO();
 		balanceSheetDTO.setStatement("StandardIncomeStatment");
-		balanceSheetDTO.setTicker("EOG");
+		balanceSheetDTO.setTicker(ticker);
 		for (int z = 0; z <= 7; z++) {
 			String fiscalYear = year[z];
 			balanceSheetDTO.setFiscal_year(fiscalYear);
@@ -645,11 +646,11 @@ public class IvaniumFinancialService {
 
 				String fiscalQuarter = "fiscal_period=" + period[i];
 				ResponseEntity<StandardIncomeStatment> result = restTemplate.exchange(
-						"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
+						"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=balance_sheet&fiscal_year="
 								+ fiscalYear + "&" + fiscalQuarter,
 						HttpMethod.GET, request, StandardIncomeStatment.class);
 
-				String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
+				String tesrtUrl = "https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=balance_sheet&fiscal_year="
 						+ fiscalYear + "&" + fiscalQuarter;
 				System.out.println(tesrtUrl);
 				StandardIncomeStatment data = result.getBody();
@@ -710,7 +711,7 @@ public class IvaniumFinancialService {
 						crrentPage += 1;
 						String urlAttr = ("page_index=" + crrentPage);
 						ResponseEntity<StandardIncomeStatment> results = restTemplate.exchange(
-								"https://api.intrinio.com/financials/standardized?identifier=EOG&statement=balance_sheet&fiscal_year="
+								"https://api.intrinio.com/financials/standardized?identifier="+ticker+"&statement=balance_sheet&fiscal_year="
 										+ fiscalYear + "&" + fiscalQuarter + "&page_index=" + crrentPage,
 								HttpMethod.GET, request, StandardIncomeStatment.class);
 						data = result.getBody();
@@ -902,8 +903,8 @@ public class IvaniumFinancialService {
 
 	}*/
 
-	@RequestMapping(value = "/fact/dailyscript/news", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getdailyscriptNews() {
+	@RequestMapping(value = "/fact/dailyscript/news/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getdailyscriptNews(@PathVariable("ticker") String  ticker) {
 		try {
 
 			int crrentPage = 0;
@@ -916,7 +917,7 @@ public class IvaniumFinancialService {
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<StandardNewsDTO> result = restTemplate.exchange(
-					"https://api.intrinio.com/news?identifier=EOG", HttpMethod.GET, request,
+					"https://api.intrinio.com/news?identifier="+ticker, HttpMethod.GET, request,
 					StandardNewsDTO.class);
 			StandardNewsDTO data = result.getBody();
 			crrentPage = data.getCurrent_page();
@@ -928,7 +929,7 @@ public class IvaniumFinancialService {
 				crrentPage += 1;
 				String urlAttr = ("page_index=" + crrentPage);
 				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
-						"https://api.intrinio.com/news?identifier=EOG", HttpMethod.GET, request,
+						"https://api.intrinio.com/news?identifier="+ticker, HttpMethod.GET, request,
 						HistoricaldataDTO.class);
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
@@ -950,8 +951,8 @@ public class IvaniumFinancialService {
 	}
 
 	// bi weekly script short interest
-	@RequestMapping(value = "/fact/biweeklyscript/shortinterest", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getBiWeeklyShortInterest() {
+	@RequestMapping(value = "/fact/biweeklyscript/shortinterest/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getBiWeeklyShortInterest(@PathVariable("ticker") String  ticker) {
 		try {
 
 			int crrentPage = 0;
@@ -964,7 +965,7 @@ public class IvaniumFinancialService {
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<StandardHistoricalData> result = restTemplate.exchange(
-					"https://api.intrinio.com/historical_data?identifier=EOG&item=short_interest", HttpMethod.GET,
+					"https://api.intrinio.com/historical_data?identifier="+ticker+"&item=short_interest", HttpMethod.GET,
 					request, StandardHistoricalData.class);
 			StandardHistoricalData data = result.getBody();
 			crrentPage = data.getCurrent_page();
@@ -976,7 +977,7 @@ public class IvaniumFinancialService {
 				crrentPage += 1;
 				String urlAttr = ("page_index=" + crrentPage);
 				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
-						"https://api.intrinio.com/historical_data?identifier=EOG&item=short_interest", HttpMethod.GET,
+						"https://api.intrinio.com/historical_data?identifier="+ticker+"&item=short_interest", HttpMethod.GET,
 						request, HistoricaldataDTO.class);
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
@@ -998,8 +999,8 @@ public class IvaniumFinancialService {
 	}
 
 	// bi weekly script short interest
-	@RequestMapping(value = "/fact/biweeklyscript/instuitional/ownership", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String getBiWeeklyInstuitional() {
+	@RequestMapping(value = "/fact/biweeklyscript/instuitional/ownership/{ticker}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String getBiWeeklyInstuitional(@PathVariable("ticker") String  ticker) {
 		try {
 
 			int crrentPage = 0;
@@ -1011,7 +1012,7 @@ public class IvaniumFinancialService {
 			HttpEntity<String> request = new HttpEntity<String>(headers);
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<StandardInstuitionalOwnershipDTO> result = restTemplate.exchange(
-					"https://api.intrinio.com/securities/institutional_ownership?identifier=EOG", HttpMethod.GET,
+					"https://api.intrinio.com/securities/institutional_ownership?identifier="+ticker, HttpMethod.GET,
 					request, StandardInstuitionalOwnershipDTO.class);
 			StandardInstuitionalOwnershipDTO data = result.getBody();
 			crrentPage = data.getCurrent_page();
@@ -1023,7 +1024,7 @@ public class IvaniumFinancialService {
 				crrentPage += 1;
 				String urlAttr = ("page_index=" + crrentPage);
 				ResponseEntity<HistoricaldataDTO> results = restTemplate.exchange(
-						"https://api.intrinio.com/securities/institutional_ownership?identifier=EOG", HttpMethod.GET,
+						"https://api.intrinio.com/securities/institutional_ownership?identifier="+ticker, HttpMethod.GET,
 						request, HistoricaldataDTO.class);
 				data = result.getBody();
 				crrentPage = data.getCurrent_page();
